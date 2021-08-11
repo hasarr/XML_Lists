@@ -1,0 +1,88 @@
+﻿<Window x:Class="ES_SYSTEM_K_Listy.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ES_SYSTEM_K_Listy.UserControls"
+        mc:Ignorable="d"
+        Title="Listy produkcyjne " Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="4*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Rectangle Grid.Row="0" Grid.Column="0" Fill="#c94036" />
+        <TextBlock Text="Dostępne listy produkcyjne:" TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"  FontSize="16" Foreground="#fff"/>
+
+        
+        <ListView Grid.Column="0"  Grid.Row="1" BorderThickness="0" Background="#76ba38" x:Name="userListView" FontSize="14" Foreground="#fff" Padding="0" Margin="0"
+                  >
+        <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="userListViewItemClick" />
+                    <Setter Property="Background" Value="#4e73a3"/>
+                    <Setter Property="Padding" Value="5"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="BorderBrush" Value="#0b99a3"/>
+                    
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+        <TextBlock Text="Wersja testowa ALPHA 0.2" Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom" />
+
+
+        <Rectangle Grid.Row="0" Grid.Column="1" Fill="#e88a2c" />
+        <Button Content="Odśwież" Grid.Column="1" HorizontalAlignment="Left" Height="30" x:Name="refreshUserPageButton" Click="refreshUserPage_Click" Margin=" 5" Padding="10 0">
+            <Button.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="Background" Value="#b30000"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Style>
+            </Button.Resources>
+        </Button>
+
+        <TextBlock Text="Nie wybrano listy" Grid.Column="1" Grid.Row="0" FontSize="25" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="selectedListTextBlock"/>
+        <Button  x:Name="admin_panel_button" Click="admin_panel_button_Click" Content="Panel admina" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Height="30" Margin="10" Padding="10 0">
+            <Button.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="Background" Value="#b30000"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Style>
+            </Button.Resources>
+        </Button>
+        <local:UserControlDataGrid  Grid.Row="1" Grid.Column="1"  CanUserAddRows="False" 
+                                x:Name="UserWindowDataGridControl"  />
+
+
+        <Button Content="Zapisz zmiany w liście" Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" Margin="10 0 10 40" Visibility="Visible" 
+                x:Name="saveListButton" Padding="5 " Click="saveListButton_Click">
+            <Button.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="Background" Value="#b30000"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Style>
+            </Button.Resources>
+        </Button>
+        
+        <Button Content="Zakończ" Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" Margin="10" Visibility="Visible" 
+                x:Name="endListButton" Click="endListButton_Click" Padding="5 ">
+            <Button.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="Background" Value="#b30000"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Style>
+            </Button.Resources>
+        </Button>
+      
+    </Grid>
+</Window>

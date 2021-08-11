@@ -1,0 +1,45 @@
+﻿<Window x:Class="ES_SYSTEM_K_Listy.Login"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ES_SYSTEM_K_Listy"
+        mc:Ignorable="d"
+        Title="Login" Height="400" Width="500">
+    <StackPanel Background="#d96030">
+        <TextBlock Text="Zaloguj się" FontSize="48" FontFamily="Impact" HorizontalAlignment="Center" Margin="0 30 0 0" Foreground="#faf8f7"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBlock Text="Login" Margin="0 0 20 0" VerticalAlignment="Center" FontSize="24" Foreground="#faf8f7"/>
+            <TextBox x:Name="loginInput" Width="200"  Margin="0 30" Height="35" Padding="5" Text="admin">
+                <TextBox.Resources>
+                    <Style TargetType="{x:Type TextBox}">
+                        <Setter Property="Background" Value="#c9c8c7"/>
+
+                    </Style>
+                </TextBox.Resources>
+            </TextBox>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBlock Text="Hasło" Margin="0 0 20 0" VerticalAlignment="Center" FontSize="24" Foreground="#faf8f7" />
+            <PasswordBox x:Name="passwordInput" Width="200"  Margin="0 30" Height="35" Padding="5" Password="123">
+                <PasswordBox.Resources>
+                <Style TargetType="{x:Type PasswordBox}">
+                        <Setter Property="Background" Value="#c9c8c7"/>
+                        
+                    </Style>
+                </PasswordBox.Resources>
+            </PasswordBox>
+        </StackPanel>
+
+        <Button x:Name="loginSubmitButton" Click="loginSubmitButton_Click"  Content="Zaloguj" Width="400px" Height="50px" BorderThickness="3" BorderBrush="#ed601a" 
+                Foreground="#faf8f7" Background="#cc4502" FontSize="24">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="15"/>
+               
+                </Style>
+            </Button.Resources>
+        </Button>
+    </StackPanel>
+</Window>
