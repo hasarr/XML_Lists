@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ES_SYSTEM_K_Listy.UserControls"
         mc:Ignorable="d"
-        Title="Listy produkcyjne " Height="450" Width="800">
+        Title="Listy produkcyjne " MinHeight="500" MinWidth="900" Height="500" Width="900">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -21,7 +21,7 @@
         <TextBlock Text="Dostępne listy produkcyjne:" TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"  FontSize="16" Foreground="#fff"/>
 
         
-        <ListView Grid.Column="0"  Grid.Row="1" BorderThickness="0" Background="#76ba38" x:Name="userListView" FontSize="14" Foreground="#fff" Padding="0" Margin="0"
+        <ListView Grid.Column="0"  Grid.Row="1" BorderThickness="0" Background="#76ba38" x:Name="userListView" FontSize="14" Foreground="#fff" Padding="0" Margin="0 0 0 30"
                   >
         <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
@@ -34,8 +34,9 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <TextBlock Text="Wersja testowa ALPHA 0.2" Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom" />
-
+        <TextBlock Text="Zalogowano jako: " Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom" Margin="0 0 0 14" x:Name="loginInfoTextBlock" Background="ForestGreen" Foreground="AntiqueWhite"/>
+        <TextBlock Text="Wersja testowa ALPHA 0.2" Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom" Background="ForestGreen" Foreground="AntiqueWhite"/>
+        
 
         <Rectangle Grid.Row="0" Grid.Column="1" Fill="#e88a2c" />
         <Button Content="Odśwież" Grid.Column="1" HorizontalAlignment="Left" Height="30" x:Name="refreshUserPageButton" Click="refreshUserPage_Click" Margin=" 5" Padding="10 0">
@@ -49,7 +50,7 @@
         </Button>
 
         <TextBlock Text="Nie wybrano listy" Grid.Column="1" Grid.Row="0" FontSize="25" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="selectedListTextBlock"/>
-        <Button  x:Name="admin_panel_button" Click="admin_panel_button_Click" Content="Panel admina" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Height="30" Margin="10" Padding="10 0">
+        <Button  x:Name="admin_panel_button" Click="admin_panel_button_Click" Content="Panel admina" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Height="30" Margin="10 10 40 10" Padding="10 0">
             <Button.Resources>
                 <Style TargetType="Button">
                     <Setter Property="Foreground" Value="White"/>
@@ -58,6 +59,12 @@
                 </Style>
             </Button.Resources>
         </Button>
+
+        <Button  Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" Height="30" Margin="5"  BorderThickness="0" Background="#e88a2c" 
+                 x:Name="infoButton" Click="infoButton_Click">
+            <Image Source="/Windows/icon_image.png" />
+        </Button>
+
         <local:UserControlDataGrid  Grid.Row="1" Grid.Column="1"  CanUserAddRows="False" 
                                 x:Name="UserWindowDataGridControl"  />
 

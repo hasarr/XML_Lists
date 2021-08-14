@@ -11,3 +11,5 @@ using System.Windows;
 )]
 
 [assembly: AssemblyCopyright("Przemys³aw Goncerz")]
+[assembly: AssemblyVersion("0.2")]
+

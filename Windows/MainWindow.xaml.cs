@@ -22,6 +22,7 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.Security.AccessControl;
 using System.Windows.Controls.Primitives;
+using ES_SYSTEM_K_Listy.Windows;
 
 namespace ES_SYSTEM_K_Listy
 {
@@ -75,6 +76,7 @@ namespace ES_SYSTEM_K_Listy
             //Set events for starting and ending edit in a datagrid
             UserWindowDataGridControl.BegininngdEdit += UserWindowDataGridControl_BeginningEdit;
             UserWindowDataGridControl.CellEditEnding += UserWindowDataGridControl_CellEditEnding;
+            loginInfoTextBlock.Text += App.Current.Properties["username"].ToString();
         }
 
         /// <summary>
@@ -510,11 +512,6 @@ namespace ES_SYSTEM_K_Listy
                 userListView.Items.Add(buffer);
                
             }
-            if (selectedListTextBlock.Text.ToString() != "Nie wybrano listy" && selectedListTextBlock.Text.ToString() != string.Empty)
-            {
-                refreshDataGrid(UserWindowDataGridControl.WideDataGrid, userListView, App.Current.Properties["defaultXMLPath"] + "\\XML_Public");
-
-            }
         }
 
 
@@ -592,15 +589,29 @@ namespace ES_SYSTEM_K_Listy
                 {
                     if (!File.Exists(App.Current.Properties["defaultXMLPath"] + "\\XML_Done\\" + selectedListTextBlock.Text + ".xml"))
                     {
-                        File.Move(App.Current.Properties["defaultXMLPath"] + "\\XML_Public\\" + selectedListTextBlock.Text + ".xml", App.Current.Properties["defaultXMLPath"]  + "\\XML_Done\\" + selectedListTextBlock.Text + ".xml");
-                        defaultView();
-                        refreshUserPage();
+                        try
+                        {
+                            File.Move(App.Current.Properties["defaultXMLPath"] + "\\XML_Public\\" + selectedListTextBlock.Text + ".xml", App.Current.Properties["defaultXMLPath"] + "\\XML_Done\\" + selectedListTextBlock.Text + ".xml");
+                            defaultView();
+                            refreshUserPage();
+                        }
+                        catch(Exception ex)
+                        {
+                            MessageBox.Show("BŁĄD: " + ex.Message.ToString());
+                        }
                     }
                     else { 
                         MessageBox.Show("Nie udało się zapisać, lista o takiej samej nazwie jest już oznaczona jako zakończona");
-                        File.Delete(App.Current.Properties["defaultXMLPath"] + "\\XML_Public\\" + selectedListTextBlock.Text + ".xml");
-                        defaultView();
-                        refreshUserPage();
+                        try
+                        {
+                            File.Delete(App.Current.Properties["defaultXMLPath"] + "\\XML_Public\\" + selectedListTextBlock.Text + ".xml");
+                            defaultView();
+                            refreshUserPage();
+                        }
+                        catch(Exception ex)
+                        {
+                            MessageBox.Show("Błąd podczas przetwarzania listy: " + ex.Message.ToString());
+                        }
                     }
                 }
                 else
@@ -619,6 +630,12 @@ namespace ES_SYSTEM_K_Listy
         private void saveListButton_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void infoButton_Click(object sender, RoutedEventArgs e)
+        {
+            Info infoWIndow = new();
+            infoWIndow.ShowDialog();
         }
     }
 }

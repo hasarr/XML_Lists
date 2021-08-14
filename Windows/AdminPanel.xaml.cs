@@ -318,6 +318,17 @@ namespace ES_SYSTEM_K_Listy
 
             if (flexibleAdminButton.Content.ToString() == "Publikuj listę")
             {
+                try
+                {
+                    DataTable dt = ((DataView)adminDataGrid.WideDataGrid.ItemsSource).ToTable();
+                    dt.WriteXml(App.Current.Properties["defaultXMLPath"] + "\\XML\\" + selectedListTextBlock.Text + ".xml", XmlWriteMode.WriteSchema, false);
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message.ToString());
+                    return;
+                }
+
                 moveProductionList(App.Current.Properties["defaultXMLPath"] + "\\XML", App.Current.Properties["defaultXMLPath"] + "\\XML_Public", "publiczna");
             }
             else if (flexibleAdminButton.Content.ToString() == "Wycofaj listę")

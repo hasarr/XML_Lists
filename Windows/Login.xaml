@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ES_SYSTEM_K_Listy"
         mc:Ignorable="d"
-        Title="Login" Height="400" Width="500">
+        Title="Login" MinHeight="400"  MinWidth="500" Height="400" Width="500">
     <StackPanel Background="#d96030">
         <TextBlock Text="Zaloguj się" FontSize="48" FontFamily="Impact" HorizontalAlignment="Center" Margin="0 30 0 0" Foreground="#faf8f7"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
