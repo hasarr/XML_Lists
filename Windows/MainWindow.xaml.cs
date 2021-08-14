@@ -71,7 +71,7 @@ namespace ES_SYSTEM_K_Listy
             {
                 admin_panel_button.Visibility = Visibility.Hidden;
             }
-
+            CreateFileWatcher(App.Current.Properties["defaultXMLPath"].ToString() + "\\XML_Public");
             //Set events for starting and ending edit in a datagrid
             UserWindowDataGridControl.BegininngdEdit += UserWindowDataGridControl_BeginningEdit;
             UserWindowDataGridControl.CellEditEnding += UserWindowDataGridControl_CellEditEnding;
@@ -104,6 +104,23 @@ namespace ES_SYSTEM_K_Listy
 
         private void UserWindowDataGridControl_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
         {
+            if ((bool)App.Current.Properties["isAdmin"])
+            {
+                e.Cancel = true;
+                MessageBox.Show("Aby edytować listę jako admin, wycofaj ją najpierw z publicznych list w panelu admina");
+                return;
+            }
+            
+            string filePath = App.Current.Properties["defaultXMLPath"] + "\\XML_Public\\" + selectedListTextBlock.Text + ".xml";
+            if (!File.Exists(filePath))
+            {
+                defaultView();
+                refreshUserPage();
+                MessageBox.Show("Lista już nie istnieje");
+                e.Cancel = true;
+                return;
+            }
+
             if (e.Column.Header.ToString() == "Zaczęte" || e.Column.Header.ToString() == "Zakończone")
             {
                 //get index of who started column
@@ -154,82 +171,79 @@ namespace ES_SYSTEM_K_Listy
         //UNDONE: FileStream file do usuniecia albo test exception
         private void UserWindowDataGridControl_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-        
-                var whoStartedColumn = UserWindowDataGridControl.WideDataGrid.Columns.FirstOrDefault(column => column.Header.ToString() == "Kto zaczął");
-                int indexWhoStarted = whoStartedColumn.DisplayIndex;
+            string filePath = App.Current.Properties["defaultXMLPath"] + "\\XML_Public\\" + selectedListTextBlock.Text + ".xml";
+            if(!File.Exists(filePath))
+            {
+                defaultView();
+                refreshUserPage();
+                MessageBox.Show("Lista już nie istnieje");
+                e.Cancel = true;
+                return;
+            }
+
+            var whoStartedColumn = UserWindowDataGridControl.WideDataGrid.Columns.FirstOrDefault(column => column.Header.ToString() == "Kto zaczął");
+            int indexWhoStarted = whoStartedColumn.DisplayIndex;
+
+            DataGridCell whoStartedCell = getSelectedDataGridCell(UserWindowDataGridControl.WideDataGrid, indexWhoStarted);
+            DataGridCell currentCell = getSelectedDataGridCell(UserWindowDataGridControl.WideDataGrid, e.Column.DisplayIndex);
+
+            if (whoStartedCell == null) return;
+            if (currentCell == null) return;
+
+            string whoStartedCellValue = ((TextBlock)whoStartedCell.Content).Text;
 
 
+            //internal function for saving data
+            void saveData(bool valueToSave, string whoStartedValue, bool saveWhoStartedValue)
+            {
+                try
+                {
+                    //get Items from DataGrid
+                    DataTable dt = ((DataView)UserWindowDataGridControl.WideDataGrid.ItemsSource).ToTable();
 
-                DataGridCell whoStartedCell = getSelectedDataGridCell(UserWindowDataGridControl.WideDataGrid, indexWhoStarted);
-                DataGridCell currentCell = getSelectedDataGridCell(UserWindowDataGridControl.WideDataGrid, e.Column.DisplayIndex);
+                    //save WhoStartedValue if saveWhoStartedValue is true
+                    if(saveWhoStartedValue) dt.Rows[e.Row.GetIndex()][indexWhoStarted] = whoStartedValue;
+                    //save value for cell
+                    dt.Rows[e.Row.GetIndex()][e.Column.DisplayIndex] = valueToSave;
 
+                    //finally save to xml
+                    dt.WriteXml(filePath, XmlWriteMode.WriteSchema, false);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message.ToString());
+                    e.Cancel = true;
+                    defaultView();
+                    return;
+                }
+            }
 
-                if (whoStartedCell == null) return;
-                if (currentCell == null) return;
-
-                string whoStartedCellValue = ((TextBlock)whoStartedCell.Content).Text;
+            
 
                 if (whoStartedCellValue.ToString() == string.Empty || whoStartedCellValue.ToString() == App.Current.Properties["username"].ToString())
                 {
                     if (e.Column.Header.ToString() == "Zaczęte" || e.Column.Header.ToString() == "Zakończone")
                     {
-                    string file;
-                    file = App.Current.Properties["defaultXMLPath"] + "\\XML_Public\\" + selectedListTextBlock.Text + ".xml";
+                    
                         bool currentCellValue = ((CheckBox)currentCell.Content).IsChecked.Value;
 
 
                         if (currentCellValue && e.Column.Header.ToString() == "Zaczęte")
                         {
-                            try
-                            {
-                                DataTable dt = ((DataView)UserWindowDataGridControl.WideDataGrid.ItemsSource).ToTable();
-                                dt.Rows[e.Row.GetIndex()][indexWhoStarted] = App.Current.Properties["username"];
-                                dt.Rows[e.Row.GetIndex()][e.Column.DisplayIndex] = true;
-
-                                dt.WriteXml(file,
-                                XmlWriteMode.WriteSchema, false);
-
-                            
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show(ex.Message.ToString());
-                                e.Cancel = true;
-                                return;
-                            }
+                            saveData(true, App.Current.Properties["username"].ToString(), true);
                         }
                         else if (currentCellValue == false && App.Current.Properties["username"].ToString() == whoStartedCellValue && e.Column.Header.ToString() == "Zaczęte")
                         {
-
-                            DataTable dt = ((DataView)UserWindowDataGridControl.WideDataGrid.ItemsSource).ToTable();
-                            dt.Rows[e.Row.GetIndex()][indexWhoStarted] = "";
-                            dt.Rows[e.Row.GetIndex()][e.Column.DisplayIndex] = false;
-                            dt.WriteXml(file,
-                                XmlWriteMode.WriteSchema, false);
-
-                       
-                    }
+                            saveData(false, string.Empty, true);
+                        }
                         else if (currentCellValue && e.Column.Header.ToString() == "Zakończone")
                         {
-                        //get items from the grid
-                            DataTable dt = ((DataView)UserWindowDataGridControl.WideDataGrid.ItemsSource).ToTable();
-                        //add edited field to the DataTable field
-                            dt.Rows[e.Row.GetIndex()][e.Column.DisplayIndex] = true;
-                        //save changes to XML
-                            dt.WriteXml(file,
-                            XmlWriteMode.WriteSchema, false);
-
-                       
-                    }
+                            saveData(true, string.Empty, false);
+                        }
                         else if (currentCellValue == false && e.Column.Header.ToString() == "Zakończone")
                         {
-                            DataTable dt = ((DataView)UserWindowDataGridControl.WideDataGrid.ItemsSource).ToTable();
-                            dt.Rows[e.Row.GetIndex()][e.Column.DisplayIndex] = false;
-                            dt.WriteXml(file,
-                            XmlWriteMode.WriteSchema, false);
-
-                       
-                    }
+                            saveData(false, string.Empty, false);
+                        }
 
 
                     }
@@ -305,6 +319,7 @@ namespace ES_SYSTEM_K_Listy
                  try
                  {
                      refreshDataGrid(UserWindowDataGridControl.WideDataGrid, userListView, App.Current.Properties["defaultXMLPath"] + "\\XML_Public");
+                     refreshUserPage();
                      return;
                  }
                  catch(Exception)
@@ -332,6 +347,8 @@ namespace ES_SYSTEM_K_Listy
             catch(Exception x)
             {
                 MessageBox.Show(x.Message.ToString());
+                defaultView();
+                refreshUserPage();
                 return false;
             }
 
@@ -341,7 +358,7 @@ namespace ES_SYSTEM_K_Listy
             dataGridName.Visibility = Visibility.Visible;
             dataGridName.Columns.Clear();
             refreshDataGrid(dataGridName, selectedList, path);
-            CreateFileWatcher(path);
+            
             file.Close();
             return true;
         }
@@ -365,6 +382,8 @@ namespace ES_SYSTEM_K_Listy
                 catch (Exception x)
                 {
                     MessageBox.Show(x.Message.ToString());
+                    defaultView();
+                    refreshUserPage();
                     return;
                 }
                 //defaultData is a DataTable that gets data from XML file 
@@ -474,7 +493,7 @@ namespace ES_SYSTEM_K_Listy
         }
 
         //refresh all lists
-        private void refreshUserPage()
+        private async void refreshUserPage()
         {
             
             userListView.Items.Clear();
@@ -502,7 +521,7 @@ namespace ES_SYSTEM_K_Listy
         /// <summary>
         /// Restore default View of the app in the MainWindow 
         /// </summary>
-        private void defaultView()
+        private async void defaultView()
         {
             UserWindowDataGridControl.WideDataGrid.Columns.Clear();
             UserWindowDataGridControl.WideDataGrid.Visibility = Visibility.Hidden;

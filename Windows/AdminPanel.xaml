@@ -91,7 +91,17 @@
         <StackPanel Grid.Row="3" Grid.Column="3" Background="GhostWhite" MinHeight="1">
 
             <local:UserControlDataGrid CanUserAddRows="False" x:Name="adminDataGrid"/>
-           
+            <Button Content="Zapisz zmiany" x:Name="saveListButton" Margin="5" Visibility="Hidden" Click="saveListButton_Click">
+                <Button.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Background" Value="#115763"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Padding" Value="4"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+            
             <TextBlock Text="Status: "  Margin="5" x:Name="listStatusTextBlock" Visibility="Hidden" FontSize="16"/>
             <Button  Content="" Margin="5" Visibility="Hidden" x:Name="flexibleAdminButton" Click="flexibleAdminButton_Click">
                 <Button.Resources>

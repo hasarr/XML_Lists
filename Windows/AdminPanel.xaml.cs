@@ -41,13 +41,15 @@ namespace ES_SYSTEM_K_Listy
         /// <param name="item">Send an ListViewItem object in order to read from it</param>
         /// <param name="XmlPath">Give a specified path to an XML folder (no slashes at the end of the path)</param>
         /// <param name="listStatus">Specify the status of the list in this format: 'Status: ' + currentStatus</param>
-        private void OpenListItemInDataGrid(ListView list,ListViewItem item, string XmlPath, string listStatus, string flexibleButtonContent)
+        private void OpenListItemInDataGrid(ListView list,ListViewItem item, string XmlPath, string listStatus, string flexibleButtonContent, bool showSaveListButton)
         {
+            
             //set default values for a datagrid properties and restore default view
             adminDataGrid.WideDataGrid.IsReadOnly = true;
             adminDataGrid.WideDataGrid.CanUserAddRows = false;
             defaultView();
             
+
             //check if item is selected and if it contains something
             if (item != null && item.IsSelected)
             {
@@ -58,7 +60,17 @@ namespace ES_SYSTEM_K_Listy
                 {
                     DataSet data = new DataSet();
                     //read from xml
-                    data.ReadXml(listPath);
+                    try
+                    { 
+                        data.ReadXml(listPath); 
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("BŁĄD: " + ex.Message.ToString());
+                        defaultView();
+                        return;
+                    }
+
                     //check if data contains tables, if it does, proceed to read the list, if it doesn't return error
                     if (data.Tables.Count > 0)
                     {
@@ -69,6 +81,7 @@ namespace ES_SYSTEM_K_Listy
                         listStatusTextBlock.Text = listStatus;
                         listStatusTextBlock.Visibility = Visibility.Visible;
                         deleteListButton.Visibility = Visibility.Visible;
+                        if (showSaveListButton) saveListButton.Visibility = Visibility.Visible;
                     }
                     else if (data.Tables.Count <= 0)
                     {
@@ -125,7 +138,15 @@ namespace ES_SYSTEM_K_Listy
             {
                 if (File.Exists(path))
                 {
-                    File.Delete(path);
+                    try 
+                    { 
+                        File.Delete(path); 
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show("BŁĄD: " + ex.Message.ToString());
+                        return false;
+                    }
                     return true;
                 }
                 else return false;
@@ -145,6 +166,7 @@ namespace ES_SYSTEM_K_Listy
             flexibleAdminButton.Visibility = Visibility.Hidden;
             listStatusTextBlock.Visibility = Visibility.Hidden;
             deleteListButton.Visibility = Visibility.Hidden;
+            saveListButton.Visibility = Visibility.Hidden;
             listStatusTextBlock.Text = string.Empty;
             flexibleAdminButton.Content = string.Empty;
             selectedListTextBlock.Text = "Nie wybrano listy";
@@ -187,19 +209,20 @@ namespace ES_SYSTEM_K_Listy
         private void adminListViewItemClick(object sender, MouseButtonEventArgs e)
         {
 
-            OpenListItemInDataGrid(adminListView,sender as ListViewItem, App.Current.Properties["defaultXMLPath"] + "\\XML", "Status: niepubliczna", "Publikuj listę");
+            OpenListItemInDataGrid(adminListView,sender as ListViewItem, App.Current.Properties["defaultXMLPath"] + "\\XML", "Status: niepubliczna", "Publikuj listę", true);
+            
 
         }
 
         private void userListViewItemClick(object sender, MouseButtonEventArgs e)
         {
-            OpenListItemInDataGrid(userListView, sender as ListViewItem, App.Current.Properties["defaultXMLPath"] + "\\XML_Public", "Status: publiczna", "Wycofaj listę");
+            OpenListItemInDataGrid(userListView, sender as ListViewItem, App.Current.Properties["defaultXMLPath"] + "\\XML_Public", "Status: publiczna", "Wycofaj listę",false);
 
         }
 
         private void endedListViewItemClick(object sender, MouseButtonEventArgs e)
         {
-            OpenListItemInDataGrid(endedListView, sender as ListViewItem, App.Current.Properties["defaultXMLPath"] + "\\XML_Done", "Status: zakończona", string.Empty);
+            OpenListItemInDataGrid(endedListView, sender as ListViewItem, App.Current.Properties["defaultXMLPath"] + "\\XML_Done", "Status: zakończona", string.Empty,false);
 
         }
 
@@ -216,8 +239,8 @@ namespace ES_SYSTEM_K_Listy
             InitializeComponent();
             defaultView();
             refreshAdminPage();
-            
-   
+
+
         }
 
         /// <summary>
@@ -227,15 +250,14 @@ namespace ES_SYSTEM_K_Listy
         /// <param name="e"></param>
         private void addListButton_Click(object sender, RoutedEventArgs e)
         {
-            //set header text
-            selectedListTextBlock.Text = "Dodaj listę";
+            
             //clear content from AddListPage
             addListPage.defaultView();
-            adminDataGrid.Visibility = Visibility.Hidden;
+
+            defaultView();
+            //set header text
+            selectedListTextBlock.Text = "Dodaj listę";
             mainFrame.Visibility = Visibility.Visible;
-            flexibleAdminButton.Visibility = Visibility.Hidden;
-            listStatusTextBlock.Visibility = Visibility.Hidden;
-            deleteListButton.Visibility = Visibility.Hidden;
             mainFrame.Content = addListPage;
             refreshAdminPage();
 
@@ -245,6 +267,8 @@ namespace ES_SYSTEM_K_Listy
         {
             refreshAdminPage();
         }
+
+        //TODO: ZROBIĆ KURWA TRY CATCH W CZYTANIU XML PLS KURWA NO
 
         /// <summary>
         /// Chenge the location of a productionList
@@ -260,6 +284,7 @@ namespace ES_SYSTEM_K_Listy
                     "Uwaga!", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes
                     && !(File.Exists(XmlPathTo + "\\" + selectedListTextBlock.Text + ".xml")))
             {
+
                 try
                 {
                     File.Move(XmlPathFrom + "\\" + selectedListTextBlock.Text + ".xml",
@@ -281,7 +306,7 @@ namespace ES_SYSTEM_K_Listy
             }
             else 
             {
-                MessageBox.Show("Plik już istnieje w innym drzewie");
+                MessageBox.Show("Nie przeniesiono");
                 return false; 
             }
         }
@@ -326,6 +351,24 @@ namespace ES_SYSTEM_K_Listy
             
             
 
+        }
+
+        private void saveListButton_Click(object sender, RoutedEventArgs e)
+        {
+            string file;
+            file = App.Current.Properties["defaultXMLPath"] + "\\XML\\" + selectedListTextBlock.Text + ".xml";
+            DataTable dt = ((DataView)adminDataGrid.WideDataGrid.ItemsSource).ToTable();
+
+            try
+            {
+                dt.WriteXml(file,
+              XmlWriteMode.WriteSchema, false);
+                MessageBox.Show("Zapisano zmiany");
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("BŁĄD: " + ex.Message.ToString());
+            }
         }
     }
 }

@@ -10,7 +10,7 @@
         <TextBlock Text="Zaloguj się" FontSize="48" FontFamily="Impact" HorizontalAlignment="Center" Margin="0 30 0 0" Foreground="#faf8f7"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <TextBlock Text="Login" Margin="0 0 20 0" VerticalAlignment="Center" FontSize="24" Foreground="#faf8f7"/>
-            <TextBox x:Name="loginInput" Width="200"  Margin="0 30" Height="35" Padding="5" Text="admin">
+            <TextBox x:Name="loginInput" Width="200"  Margin="0 30" Height="35" Padding="5">
                 <TextBox.Resources>
                     <Style TargetType="{x:Type TextBox}">
                         <Setter Property="Background" Value="#c9c8c7"/>
@@ -22,7 +22,7 @@
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <TextBlock Text="Hasło" Margin="0 0 20 0" VerticalAlignment="Center" FontSize="24" Foreground="#faf8f7" />
-            <PasswordBox x:Name="passwordInput" Width="200"  Margin="0 30" Height="35" Padding="5" Password="123">
+            <PasswordBox x:Name="passwordInput" Width="200"  Margin="0 30" Height="35" Padding="5" >
                 <PasswordBox.Resources>
                 <Style TargetType="{x:Type PasswordBox}">
                         <Setter Property="Background" Value="#c9c8c7"/>

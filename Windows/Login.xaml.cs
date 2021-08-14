@@ -27,9 +27,48 @@ namespace ES_SYSTEM_K_Listy
             InitializeComponent();
         }
 
+        private void checkLoginFunctionForTesting()
+        {
+            MainWindow app = new MainWindow();
+            if ((bool)App.Current.Properties["mainWindowConstructorStatus"])
+            {
+                this.Close();
+                app.Show();
+            }
+            else
+            {
+                app.Close();
+            }
+
+        }
         private void loginSubmitButton_Click(object sender, RoutedEventArgs e)
         {
+            if(loginInput.Text == "admin" && passwordInput.Password == "123")
+            {
+                App.Current.Properties["username"] = "admin";
+                App.Current.Properties["isAdmin"] = true;
+                checkLoginFunctionForTesting();
+            }
 
+            else if (loginInput.Text == "operator1" && passwordInput.Password == "123")
+            {
+                App.Current.Properties["username"] = "operator1";
+                App.Current.Properties["isAdmin"] = false;
+                checkLoginFunctionForTesting();
+            }
+
+            else if (loginInput.Text == "operator2" && passwordInput.Password == "123")
+            {
+                App.Current.Properties["username"] = "operator2";
+                App.Current.Properties["isAdmin"] = false;
+                checkLoginFunctionForTesting();
+            }
+            else
+            {
+                MessageBox.Show("Nieprawidłowy login lub hasło");
+            }
+
+            /*
             MySqlConnection loginDatabase = new MySqlConnection("SERVER=127.0.0.1;DATABASE=test;UID=root;PASSWORD=;");
             try
             {
@@ -98,7 +137,8 @@ namespace ES_SYSTEM_K_Listy
                 loginDatabase.Close();
             }
                 
-           
+           */
         }
+
     }
 }

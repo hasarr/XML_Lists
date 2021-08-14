@@ -38,11 +38,13 @@ namespace ES_SYSTEM_K_Listy.UserControls
 
         private void WideDataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
         {
-            BegininngdEdit.Invoke(this, e);
+            if (BegininngdEdit != null)
+             BegininngdEdit.Invoke(this, e);
         }
 
         private void WideDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
+            if (BegininngdEdit != null)
             CellEditEnding.Invoke(this, e);
         }
     }
