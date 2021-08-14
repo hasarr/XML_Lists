@@ -87,7 +87,16 @@ namespace ES_SYSTEM_K_Listy
                 excelDialog.ShowDialog();
                 string filePath = excelDialog.FileName;
                 if (filePath == string.Empty) return;
-               
+
+                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+                //open file and returns as Stream
+                using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    using (var reader = ExcelReaderFactory.CreateReader(stream))
+                    {
+                    }
+                }
+
                 using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     // Auto-detect format, supports:
