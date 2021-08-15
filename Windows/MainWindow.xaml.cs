@@ -201,13 +201,16 @@ namespace ES_SYSTEM_K_Listy
                 try
                 {
                     //get Items from DataGrid
-                    DataTable dt = ((DataView)UserWindowDataGridControl.WideDataGrid.ItemsSource).ToTable();
+                    DataView dataGridItems = (DataView)UserWindowDataGridControl.WideDataGrid.ItemsSource;
+                    DataTable dt = (dataGridItems).ToTable();
 
                     //save WhoStartedValue if saveWhoStartedValue is true
                     if(saveWhoStartedValue) dt.Rows[e.Row.GetIndex()][indexWhoStarted] = whoStartedValue;
                     //save value for cell
                     dt.Rows[e.Row.GetIndex()][e.Column.DisplayIndex] = valueToSave;
-
+                    dataGridItems = dt.DefaultView;
+                    dataGridItems.Sort = dt.Columns[0].ColumnName + " ASC";
+                    dt = dataGridItems.ToTable();
                     //finally save to xml
                     dt.WriteXml(filePath, XmlWriteMode.WriteSchema, false);
                 }
@@ -303,7 +306,7 @@ namespace ES_SYSTEM_K_Listy
         {
             
             fileWatcher.Path = path;
-            fileWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.LastAccess | NotifyFilters.Size | NotifyFilters.FileName;
+            fileWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.LastAccess | NotifyFilters.Size | NotifyFilters.FileName ;
             fileWatcher.Filter = "*.xml";
             fileWatcher.Changed += FileWatcher_Changed;
             fileWatcher.EnableRaisingEvents = true;
@@ -372,40 +375,79 @@ namespace ES_SYSTEM_K_Listy
         /// <param name="path"></param>
         private void refreshDataGrid(DataGrid dataGridName, ListView selectedList, string path)
         {
-            FileStream file;
-            //check if user is selecting a new list or refreshing
-            if (selectedList.SelectedItem != null)
+
+            bool transferFileToDatagrid(string fullPath)
             {
+                FileStream file;
+
                 try
                 {
-                    file = File.Open(path + "\\" + selectedList.SelectedItem.ToString() + ".xml", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    if (File.Exists(fullPath))
+                        file = File.Open(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
+                    else
+                    {
+                        file = null;
+                        return false;
+                    }
                 }
                 catch (Exception x)
                 {
                     MessageBox.Show(x.Message.ToString());
-                    defaultView();
-                    refreshUserPage();
-                    return;
+                    return false;
                 }
-                //defaultData is a DataTable that gets data from XML file 
+
                 try
                 {
-                    defaultData.Tables.Clear();
-                    defaultData.ReadXml(file);
+                    if (file != null)
+                    {
+                        defaultData.Tables.Clear();
+                        defaultData.ReadXml(file);
+                        file.Dispose();
+                        file.Close();
+                        return true;
+                    }
                 }
-                catch(Exception ex)
+                catch (Exception)
                 {
                     //tutaj jest root element missing
-                    MessageBox.Show(ex.Message.ToString());
+                    file.Dispose();
                     file.Close();
-                    return;
+                    return false;
                 }
-                file.Close();
+
+                return false;
+            }
+
+            
+            //check if user is selecting a new list or refreshing
+            if (selectedList.SelectedItem != null && selectedListTextBlock.Text == "Nie wybrano listy")
+            {
+                
+    
+
+                if (transferFileToDatagrid(path + "\\" + selectedList.SelectedItem.ToString() + ".xml")) selectedListTextBlock.Text = selectedList.SelectedItem.ToString();
+                else return;
+
                 //set itemssource for a datagrid
                 if (defaultData.Tables.Count > 0)
                 {
-
+                    //set source for items
                     UserWindowDataGridControl.WideDataGrid.ItemsSource = defaultData.Tables[0].DefaultView;
+                    //set default sorting
+                    dataGridName.Items.SortDescriptions.Clear();
+                    dataGridName.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription(dataGridName.Columns[0].SortMemberPath, System.ComponentModel.ListSortDirection.Ascending));
+                    dataGridName.Columns[0].SortDirection = System.ComponentModel.ListSortDirection.Ascending;
+
+                    //Reset List with sortdirections 
+                    if (sortDirections.Count > 0)
+                        sortDirections.Clear();
+
+                    //Add sort direction field to list
+                    foreach (DataGridColumn e in dataGridName.Columns)
+                    {
+                        sortDirections.Add(e.SortDirection.ToString());
+                    }
                 }
                 else return;
 
@@ -414,22 +456,13 @@ namespace ES_SYSTEM_K_Listy
             //else if the list is selected, refresh the datagrid
             else if (selectedListTextBlock.Text.ToString() != "Nie wybrano listy" && selectedListTextBlock.Text.ToString() != string.Empty)
             {
-                try
-                {
-                    file = File.Open(path + "\\" + selectedListTextBlock.Text.ToString() + ".xml", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                }
-                catch (Exception x)
-                {
-                    MessageBox.Show( x.Message.ToString());
-                    return;
-                }
-                defaultData.Tables.Clear();
-                defaultData.ReadXml(file);
-                file.Close();
 
-                //Get sorting descriptions to recover after ItemsSource change
+                if (!transferFileToDatagrid(path + "\\" + selectedListTextBlock.Text.ToString() + ".xml")) return;
+                //Reset List with sortdirections 
                 if (sortDirections.Count > 0)
                     sortDirections.Clear();
+
+                //Add sort direction field to list
                 foreach (DataGridColumn e in dataGridName.Columns)
                 {
                     sortDirections.Add(e.SortDirection.ToString());
@@ -438,7 +471,6 @@ namespace ES_SYSTEM_K_Listy
                 //set itemssource for a datagrid
                 if (defaultData.Tables.Count > 0)
                 {
-
                     UserWindowDataGridControl.WideDataGrid.ItemsSource = defaultData.Tables[0].DefaultView;
                 }
                 else return;

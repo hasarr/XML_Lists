@@ -67,6 +67,8 @@ namespace ES_SYSTEM_K_Listy
                     catch (Exception ex)
                     {
                         MessageBox.Show("BŁĄD: " + ex.Message.ToString());
+                        deleteList(listPath);
+                        refreshAdminPage();
                         defaultView();
                         return;
                     }
@@ -134,7 +136,7 @@ namespace ES_SYSTEM_K_Listy
         /// <returns>Returns true if file was deleted, and false if delete failed</returns>
         private bool deleteList(string path)
         {
-            if (MessageBox.Show("Na pewno usunąć listę: " + selectedListTextBlock.Text + "?","Uwaga!",MessageBoxButton.YesNo,MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (MessageBox.Show("Usunąć listę: " + selectedListTextBlock.Text + "?","Uwaga!",MessageBoxButton.YesNo,MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 if (File.Exists(path))
                 {
