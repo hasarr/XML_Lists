@@ -119,13 +119,16 @@ namespace ES_SYSTEM_K_Listy
                                     //when the header row is set to 2, get list name if it exists from the 1st row
                                       for (int i = 0; i < rowReader.FieldCount; i++)
                                       {
-                                          if (rowReader.GetFieldType(i).ToString().ToLower().Contains("string"))
+                                          if (rowReader.GetFieldType(i) != null)
                                           {
-                                              if (rowReader.GetString(i) != "")
+                                              if (rowReader.GetFieldType(i).ToString().ToLower().Contains("string"))
                                               {
-                                                  nameOfList.Text = rowReader.GetString(i).ToString();
-                                                  rowReader.Read();
-                                                  return;
+                                                  if (rowReader.GetString(i) != "")
+                                                  {
+                                                      nameOfList.Text = rowReader.GetString(i).ToString();
+                                                      rowReader.Read();
+                                                      return;
+                                                  }
                                               }
                                           }
                                       }

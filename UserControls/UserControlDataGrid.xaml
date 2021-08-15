@@ -7,13 +7,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
+        
         <DataGrid AutoGenerateColumns="True" 
         CanUserAddRows="{Binding CanUserAddRows}" AlternatingRowBackground="#cccbca" RowBackground="#e6e6e6" Background="#c9c9c9"
          CanUserResizeColumns="False" x:Name="WideDataGrid" ItemsSource="{Binding ItemsSourceContent}" DataContext="{Binding DataContextContent}" 
                   CanUserReorderColumns="false" BeginningEdit="WideDataGrid_BeginningEdit" CellEditEnding="WideDataGrid_CellEditEnding">
 
-            <!--#region DataGrid Style-->
-            <DataGrid.Resources>
+            <DataGrid.ColumnHeaderStyle>
                 <!--#region  DataGrid Header Style-->
                 <Style TargetType="DataGridColumnHeader">
                     <Setter Property="Background" Value="#BD5009"/>
@@ -24,13 +24,21 @@
                     <Setter Property="BorderBrush" Value="#7a7a7a"/>
                     <Setter Property="Foreground" Value="#eeeeee"/>
                     <Setter Property="HorizontalContentAlignment" Value="Center"/>
+
+                    <Style.Triggers>
+                        <Trigger Property="SortDirection" Value="Ascending" >
+                            <Setter Property="Background" Value="#db5e0d"/>
+                        </Trigger>
+
+                        <Trigger Property="SortDirection" Value="Descending" >
+                            <Setter Property="Background" Value="#db5e0d"/>
+                        </Trigger>
+                    </Style.Triggers>
                 </Style>
                 <!--#endregion-->
-            </DataGrid.Resources>
-            <!--#endregion-->
+            </DataGrid.ColumnHeaderStyle>
 
-
-    
+           
         </DataGrid>
     </Grid>
 </UserControl>

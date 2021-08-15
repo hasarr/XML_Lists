@@ -9,12 +9,13 @@
       Title="adminAddListPage">
 
     <Grid>
-  
-    
+        <Grid.RowDefinitions>
+            <RowDefinition Height="160"/>
+            <RowDefinition/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
         
-
-      
-        <StackPanel x:Name="adminMainPanel" Grid.Row="1" Grid.Column="1" >
+        <StackPanel x:Name="adminMainPanel" Grid.Row="0" Grid.Column="0" >
 
             <TextBlock Text="Podaj nazwę listy: " Margin="5 5 5 5" FontSize="14"/>
             <TextBox x:Name="nameOfList" Margin="5 0 5 5"/>
@@ -39,8 +40,10 @@
                     <ComboBoxItem Content="2" />
                 </ComboBox>
             </StackPanel>
-            <local:UserControlDataGrid Grid.Column="1" Grid.Row="1" x:Name="productionListsDataGrid" CanUserAddRows="True"/>
-            <Button Content="Dodaj listę" x:Name="publishListButton" Width="100" Margin="20 20 20 20" Click="publishListButton_Click">
+        </StackPanel>
+        
+        <local:UserControlDataGrid Grid.Column="0" Grid.Row="1" x:Name="productionListsDataGrid" CanUserAddRows="True" VerticalAlignment="Top"/>
+        <Button Content="Dodaj listę" x:Name="publishListButton" Width="100" Margin="0 0 0 10" Click="publishListButton_Click" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center">
                 <Button.Resources>
                     <Style TargetType="Button">
                         <Setter Property="Foreground" Value="White"/>
@@ -50,6 +53,8 @@
                     </Style>
                 </Button.Resources>
             </Button>
-        </StackPanel>
+            
+       
+        
     </Grid>
 </Page>

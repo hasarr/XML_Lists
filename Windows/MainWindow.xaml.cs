@@ -170,7 +170,7 @@ namespace ES_SYSTEM_K_Listy
             else e.Cancel = true;
         }
 
-        //UNDONE: FileStream file do usuniecia albo test exception
+
         private void UserWindowDataGridControl_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             string filePath = App.Current.Properties["defaultXMLPath"] + "\\XML_Public\\" + selectedListTextBlock.Text + ".xml";
@@ -356,7 +356,6 @@ namespace ES_SYSTEM_K_Listy
 
             //Set Visibility of a Grid and End button to Visible and clear all columns
             endListButton.Visibility = Visibility.Visible;
-            saveListButton.Visibility = Visibility.Visible;
             dataGridName.Visibility = Visibility.Visible;
             dataGridName.Columns.Clear();
             refreshDataGrid(dataGridName, selectedList, path);
@@ -396,11 +395,20 @@ namespace ES_SYSTEM_K_Listy
                 }
                 catch(Exception ex)
                 {
+                    //tutaj jest root element missing
                     MessageBox.Show(ex.Message.ToString());
                     file.Close();
                     return;
                 }
                 file.Close();
+                //set itemssource for a datagrid
+                if (defaultData.Tables.Count > 0)
+                {
+
+                    UserWindowDataGridControl.WideDataGrid.ItemsSource = defaultData.Tables[0].DefaultView;
+                }
+                else return;
+
                 selectedListTextBlock.Text = selectedList.SelectedItem.ToString();
             }
             //else if the list is selected, refresh the datagrid
@@ -412,7 +420,7 @@ namespace ES_SYSTEM_K_Listy
                 }
                 catch (Exception x)
                 {
-                    MessageBox.Show(x.Message.ToString());
+                    MessageBox.Show( x.Message.ToString());
                     return;
                 }
                 defaultData.Tables.Clear();
@@ -426,18 +434,43 @@ namespace ES_SYSTEM_K_Listy
                 {
                     sortDirections.Add(e.SortDirection.ToString());
                 }
+
+                //set itemssource for a datagrid
+                if (defaultData.Tables.Count > 0)
+                {
+
+                    UserWindowDataGridControl.WideDataGrid.ItemsSource = defaultData.Tables[0].DefaultView;
+                }
+                else return;
+
+
+                //After ItemsSource is changed, retrieve the sorting order before refreshing
+                if (sortDirections.Count > 0)
+                {
+                    int i = 0;
+                    dataGridName.Items.SortDescriptions.Clear();
+                    foreach (DataGridColumn e in dataGridName.Columns)
+                    {
+                        if (sortDirections[i].ToString().ToLower() == "ascending")
+                        {
+                            dataGridName.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription(e.SortMemberPath, System.ComponentModel.ListSortDirection.Ascending));
+                            e.SortDirection = System.ComponentModel.ListSortDirection.Ascending;
+                            return;
+                        }
+                        else if (sortDirections[i].ToString().ToLower() == "descending")
+                        {
+                            dataGridName.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription(e.SortMemberPath, System.ComponentModel.ListSortDirection.Descending));
+                            e.SortDirection = System.ComponentModel.ListSortDirection.Descending;
+                            return;
+                        }
+                        i++;
+                    }
+                }
             }
             else return;
 
 
-            //set itemssource for a datagrid
-            if (defaultData.Tables.Count > 0)
-            {
-                
-                UserWindowDataGridControl.WideDataGrid.ItemsSource = defaultData.Tables[0].DefaultView;
-            }
-            else return;
-
+            
 
             foreach (DataGridColumn column in dataGridName.Columns)
             {
@@ -452,28 +485,7 @@ namespace ES_SYSTEM_K_Listy
             dataGridName.Columns[dataGridName.Columns.IndexOf(endedColumn)].IsReadOnly = false;
             dataGridName.Columns[dataGridName.Columns.IndexOf(startedColumn)].IsReadOnly = false;
 
-            //After ItemsSource is changed, retrieve the sorting order before refreshing
-           if (sortDirections.Count>0)
-            {
-                int i = 0;
-                dataGridName.Items.SortDescriptions.Clear();
-                foreach (DataGridColumn e in dataGridName.Columns)
-                {
-                    if(sortDirections[i].ToString().ToLower() == "ascending")
-                    {
-                        dataGridName.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription(e.SortMemberPath, System.ComponentModel.ListSortDirection.Ascending));
-                        e.SortDirection = System.ComponentModel.ListSortDirection.Ascending;
-                        return;
-                    }
-                    else if (sortDirections[i].ToString().ToLower() == "descending")
-                    {
-                        dataGridName.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription(e.SortMemberPath, System.ComponentModel.ListSortDirection.Descending));
-                        e.SortDirection = System.ComponentModel.ListSortDirection.Descending;
-                        return;
-                    }
-                        i++;
-                }
-            }
+            
             
         }
 
@@ -523,7 +535,6 @@ namespace ES_SYSTEM_K_Listy
             UserWindowDataGridControl.WideDataGrid.Columns.Clear();
             UserWindowDataGridControl.WideDataGrid.Visibility = Visibility.Hidden;
             endListButton.Visibility = Visibility.Hidden;
-            saveListButton.Visibility = Visibility.Hidden;
             selectedListTextBlock.Text = "Nie wybrano listy";
         }
         
@@ -627,10 +638,6 @@ namespace ES_SYSTEM_K_Listy
             
         }
 
-        private void saveListButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private void infoButton_Click(object sender, RoutedEventArgs e)
         {

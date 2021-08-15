@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ES_SYSTEM_K_Listy.UserControls"
         mc:Ignorable="d"
-        Title="AdminPanel" Height="450" Width="800">
+        Title="AdminPanel" MinHeight="500" MinWidth="900" Height="500" Width="900">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -88,42 +88,49 @@
         </Button>
 
 
-        <StackPanel Grid.Row="3" Grid.Column="3" Background="GhostWhite" MinHeight="1">
-
+        <Grid Grid.Row="3" Grid.Column="3" Background="GhostWhite" MinHeight="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="150"/>
+            </Grid.RowDefinitions>
             <local:UserControlDataGrid CanUserAddRows="False" x:Name="adminDataGrid"/>
-            <Button Content="Zapisz zmiany" x:Name="saveListButton" Margin="5" Visibility="Hidden" Click="saveListButton_Click">
-                <Button.Resources>
-                    <Style TargetType="Button">
-                        <Setter Property="Foreground" Value="White"/>
-                        <Setter Property="Background" Value="#115763"/>
-                        <Setter Property="BorderThickness" Value="0"/>
-                        <Setter Property="Padding" Value="4"/>
-                    </Style>
-                </Button.Resources>
-            </Button>
             
-            <TextBlock Text="Status: "  Margin="5" x:Name="listStatusTextBlock" Visibility="Hidden" FontSize="16"/>
-            <Button  Content="" Margin="5" Visibility="Hidden" x:Name="flexibleAdminButton" Click="flexibleAdminButton_Click">
-                <Button.Resources>
-                    <Style TargetType="Button">
-                        <Setter Property="Foreground" Value="White"/>
-                        <Setter Property="Background" Value="#115763"/>
-                        <Setter Property="BorderThickness" Value="0"/>
-                        <Setter Property="Padding" Value="4"/>
-                    </Style>
-                </Button.Resources>
-            </Button>
-            <Button Content="Usuń listę" x:Name="deleteListButton" Margin="5" Visibility="Hidden" Click="deleteListButton_Click">
-                <Button.Resources>
-                    <Style TargetType="Button">
-                        <Setter Property="Foreground" Value="White"/>
-                        <Setter Property="Background" Value="#115763"/>
-                        <Setter Property="BorderThickness" Value="0"/>
-                        <Setter Property="Padding" Value="4"/>
-                    </Style>
-                </Button.Resources>
-            </Button>
-        </StackPanel>
+                <StackPanel Grid.Row="1">
+                <Button Content="Zapisz zmiany" x:Name="saveListButton" Margin="5" Visibility="Hidden" Click="saveListButton_Click">
+                    <Button.Resources>
+                        <Style TargetType="Button">
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Background" Value="#115763"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Padding" Value="4"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            
+                <TextBlock Text="Status: "  Margin="5" x:Name="listStatusTextBlock" Visibility="Hidden" FontSize="16"/>
+            
+                <Button  Content="" Margin="5" Visibility="Hidden" x:Name="flexibleAdminButton" Click="flexibleAdminButton_Click">
+                    <Button.Resources>
+                        <Style TargetType="Button">
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Background" Value="#115763"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Padding" Value="4"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <Button Content="Usuń listę" x:Name="deleteListButton" Margin="5" Visibility="Hidden" Click="deleteListButton_Click">
+                    <Button.Resources>
+                        <Style TargetType="Button">
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Background" Value="#115763"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Padding" Value="4"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </StackPanel>
+        </Grid>
         <Frame x:Name="mainFrame"  Grid.Row="1" Grid.Column="3"  />
 
 

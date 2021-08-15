@@ -6,10 +6,10 @@
         xmlns:local="clr-namespace:ES_SYSTEM_K_Listy.UserControls"
         mc:Ignorable="d"
         Title="Listy produkcyjne " MinHeight="500" MinWidth="900" Height="500" Width="900">
-    <Grid>
-        <Grid.ColumnDefinitions>
+    <Grid >
+        <Grid.ColumnDefinitions >
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="4*" />
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
@@ -18,6 +18,8 @@
         </Grid.RowDefinitions>
 
         <Rectangle Grid.Row="0" Grid.Column="0" Fill="#c94036" />
+        <Rectangle Grid.Column="1" Grid.Row="1" Fill="#c9c9c9"/>
+        
         <TextBlock Text="Dostępne listy produkcyjne:" TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"  FontSize="16" Foreground="#fff"/>
 
         
@@ -66,22 +68,11 @@
         </Button>
 
         <local:UserControlDataGrid  Grid.Row="1" Grid.Column="1"  CanUserAddRows="False" 
-                                x:Name="UserWindowDataGridControl"  />
+                                x:Name="UserWindowDataGridControl" Margin=" 0 0 0 47" />
 
 
-        <Button Content="Zapisz zmiany w liście" Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" Margin="10 0 10 40" Visibility="Visible" 
-                x:Name="saveListButton" Padding="5 " Click="saveListButton_Click">
-            <Button.Resources>
-                <Style TargetType="Button">
-                    <Setter Property="Foreground" Value="White"/>
-                    <Setter Property="Background" Value="#b30000"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                </Style>
-            </Button.Resources>
-        </Button>
-        
         <Button Content="Zakończ" Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" Margin="10" Visibility="Visible" 
-                x:Name="endListButton" Click="endListButton_Click" Padding="5 ">
+                x:Name="endListButton" Click="endListButton_Click" Padding="5 " >
             <Button.Resources>
                 <Style TargetType="Button">
                     <Setter Property="Foreground" Value="White"/>
