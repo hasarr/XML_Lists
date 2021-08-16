@@ -325,8 +325,8 @@ namespace ES_SYSTEM_K_Listy
                     {
                         refreshDataGrid(UserWindowDataGridControl.WideDataGrid, userListView, App.Current.Properties["defaultXMLPath"] + "\\XML_Public");
                         refreshUserPage();
-                        MessageBox.Show("Lista została wycofana przez administratora!", "UWAGA!", MessageBoxButton.OK, MessageBoxImage.Stop);
-                        
+                        defaultView();
+                        MessageBox.Show("Aktualnie wybrana lista została wycofana przez administratora!", "UWAGA!", MessageBoxButton.OK, MessageBoxImage.Stop);
                     }
                     else
                     {
