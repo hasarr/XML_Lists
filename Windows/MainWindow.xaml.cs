@@ -320,11 +320,21 @@ namespace ES_SYSTEM_K_Listy
             {
                 try
                 {
-                    if (!((bool)App.Current.Properties["isAdmin"]) && e.Name.Contains(selectedListTextBlock.Text) )
-                        MessageBox.Show("Lista została wycofana przez administratora!", "UWAGA!", MessageBoxButton.OK, MessageBoxImage.Stop);
 
-                    refreshDataGrid(UserWindowDataGridControl.WideDataGrid, userListView, App.Current.Properties["defaultXMLPath"] + "\\XML_Public");
-                    refreshUserPage();
+                    if ((bool)App.Current.Properties["isAdmin"] == false && e.Name.Contains(selectedListTextBlock.Text))
+                    {
+                        refreshDataGrid(UserWindowDataGridControl.WideDataGrid, userListView, App.Current.Properties["defaultXMLPath"] + "\\XML_Public");
+                        refreshUserPage();
+                        MessageBox.Show("Lista została wycofana przez administratora!", "UWAGA!", MessageBoxButton.OK, MessageBoxImage.Stop);
+                        
+                    }
+                    else
+                    {
+                        refreshDataGrid(UserWindowDataGridControl.WideDataGrid, userListView, App.Current.Properties["defaultXMLPath"] + "\\XML_Public");
+                        refreshUserPage();
+                    }
+                    
+                    
                     return;
                 }
                 catch (Exception)
