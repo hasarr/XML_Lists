@@ -14,7 +14,7 @@
             <RowDefinition/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
-        
+
         <StackPanel x:Name="adminMainPanel" Grid.Row="0" Grid.Column="0" >
 
             <TextBlock Text="Podaj nazwę listy: " Margin="5 5 5 5" FontSize="14"/>

@@ -18,6 +18,8 @@ using Excel = Microsoft.Office.Interop.Excel;
 using System.IO;
 using ExcelDataReader;
 using System.Windows.Threading;
+using System.Globalization;
+using System.Threading;
 
 namespace ES_SYSTEM_K_Listy
 {
@@ -72,7 +74,10 @@ namespace ES_SYSTEM_K_Listy
             InitializeComponent();
             dateOfList.SelectedDateFormat = DatePickerFormat.Short;
             defaultView();
-            
+
+            CultureInfo ci = CultureInfo.CreateSpecificCulture(CultureInfo.CurrentCulture.Name);
+            ci.DateTimeFormat.ShortDatePattern = "dd-MM-yyyy";
+            Thread.CurrentThread.CurrentCulture = ci;
         }
 
         #region onClickExcelDataRead
