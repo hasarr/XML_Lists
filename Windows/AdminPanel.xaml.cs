@@ -32,6 +32,9 @@ namespace ES_SYSTEM_K_Listy
         //Set of global variables
         #region GlobalVariables
         adminAddListPage addListPage = new();
+        FileSystemWatcher filewatcherXML = new();
+        FileSystemWatcher filewatcherXML_Public = new();
+        FileSystemWatcher filewatcherXML_Done = new();
         #endregion
 
         /// <summary>
@@ -241,8 +244,35 @@ namespace ES_SYSTEM_K_Listy
             InitializeComponent();
             defaultView();
             refreshAdminPage();
+            CreateFileWatcher( filewatcherXML_Public,App.Current.Properties["defaultXMLPath"].ToString() + "\\XML_Public");
+            CreateFileWatcher(filewatcherXML, App.Current.Properties["defaultXMLPath"].ToString() + "\\XML");
+            CreateFileWatcher(filewatcherXML_Done, App.Current.Properties["defaultXMLPath"].ToString() + "\\XML_Done");
+        }
 
+        private void CreateFileWatcher(FileSystemWatcher fileWatcher, string path)
+        {
+            
+            fileWatcher.Path = path;
+            fileWatcher.Filter = "*.xml";
+            fileWatcher.Deleted += Filewatcher_Refresh; ;
+            fileWatcher.Created += Filewatcher_Refresh;
+            fileWatcher.EnableRaisingEvents = true;
+        }
 
+        private void Filewatcher_Refresh(object sender, FileSystemEventArgs e)
+        {
+            Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, (Action)(() =>
+            {
+                try
+                {
+                    refreshAdminPage();
+                    return;
+                }
+                catch (Exception)
+                {
+                    return;
+                }
+            }));
         }
 
         /// <summary>

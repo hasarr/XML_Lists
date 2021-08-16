@@ -309,8 +309,31 @@ namespace ES_SYSTEM_K_Listy
             fileWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.LastAccess | NotifyFilters.Size | NotifyFilters.FileName ;
             fileWatcher.Filter = "*.xml";
             fileWatcher.Changed += FileWatcher_Changed;
+            fileWatcher.Deleted += FileWatcher_Deleted; ;
+            fileWatcher.Created += FileWatcher_Changed;
             fileWatcher.EnableRaisingEvents = true;
         }
+
+        private void FileWatcher_Deleted(object sender, FileSystemEventArgs e)
+        {
+            Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, (Action)(() =>
+            {
+                try
+                {
+                    if (!((bool)App.Current.Properties["isAdmin"]) && e.Name.Contains(selectedListTextBlock.Text) )
+                        MessageBox.Show("Lista została wycofana przez administratora!", "UWAGA!", MessageBoxButton.OK, MessageBoxImage.Stop);
+
+                    refreshDataGrid(UserWindowDataGridControl.WideDataGrid, userListView, App.Current.Properties["defaultXMLPath"] + "\\XML_Public");
+                    refreshUserPage();
+                    return;
+                }
+                catch (Exception)
+                {
+                    return;
+                }
+            }));
+        }
+
 
         /// <summary>
         /// Event for filewatcher changed
@@ -419,7 +442,6 @@ namespace ES_SYSTEM_K_Listy
                 return false;
             }
 
-            
             //check if user is selecting a new list or refreshing
             if (selectedList.SelectedItem != null && selectedListTextBlock.Text == "Nie wybrano listy")
             {
@@ -481,6 +503,8 @@ namespace ES_SYSTEM_K_Listy
                 {
                     int i = 0;
                     dataGridName.Items.SortDescriptions.Clear();
+
+                    //Set sorting after datagrid reloading
                     foreach (DataGridColumn e in dataGridName.Columns)
                     {
                         if (sortDirections[i].ToString().ToLower() == "ascending")
