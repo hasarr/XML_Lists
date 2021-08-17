@@ -184,7 +184,7 @@ namespace ES_SYSTEM_K_Listy
             endedListView.Items.Clear();
 
             //fill Admin ListView
-            string [] xmlAdminFiles = Directory.GetFiles(App.Current.Properties["defaultXMLPath"] + "XML\\");
+            string [] xmlAdminFiles = Directory.GetFiles(App.Current.Properties["defaultXMLPath"] + "\\XML\\");
              foreach (String x in xmlAdminFiles)
             {
                 string buffer = Path.GetFileName(x);
@@ -192,7 +192,7 @@ namespace ES_SYSTEM_K_Listy
             }
 
             //fill User ListView
-            string[] xmlUserFiles = Directory.GetFiles(App.Current.Properties["defaultXMLPath"] + "XML_Public\\");
+            string[] xmlUserFiles = Directory.GetFiles(App.Current.Properties["defaultXMLPath"] + "\\XML_Public\\");
             foreach (String x in xmlUserFiles)
             {
                 string buffer = Path.GetFileName(x);
@@ -200,7 +200,7 @@ namespace ES_SYSTEM_K_Listy
             }
 
             //fill Ended ListView
-            string[] xmlEndedFiles = Directory.GetFiles(App.Current.Properties["defaultXMLPath"] + "XML_Done\\");
+            string[] xmlEndedFiles = Directory.GetFiles(App.Current.Properties["defaultXMLPath"] + "\\XML_Done\\");
             foreach (String x in xmlEndedFiles)
             {
                 string buffer = Path.GetFileName(x);

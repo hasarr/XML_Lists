@@ -47,8 +47,10 @@ namespace ES_SYSTEM_K_Listy
         public MainWindow()
         {
             InitializeComponent();
-            //Set default XML folders path
-            App.Current.Properties["defaultXMLPath"] = AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\XML_FILES\\";
+           
+
+            if (App.Current.Properties["defaultXMLPath"].ToString() == "" || App.Current.Properties["defaultXMLPath"] == null)
+                App.Current.Properties["defaultXMLPath"] = AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\XML_FILES";
             //Create default directories if they dont exist and return true if creation was complete, or false if the program couldnt create the directories, also
             //close the MainWindow if directories weren't created
             if(makeDefaultDirectories(App.Current.Properties["defaultXMLPath"].ToString() + "\\XML")&&
@@ -59,7 +61,7 @@ namespace ES_SYSTEM_K_Listy
             }
             else {
                 App.Current.Properties["mainWindowConstructorStatus"] = false;
-                MessageBox.Show("Nie można uruchomić programu, błąd podczas ustalania domyślnych ścieżek XML, sprawdź uprawnienia"); this.Close(); return;
+                MessageBox.Show("Nie można uruchomić programu, błąd podczas ustalania domyślnych ścieżek XML, sprawdź uprawnienia","BŁĄD!",MessageBoxButton.OK,MessageBoxImage.Error); this.Close(); return;
             }
 
             refreshUserPage();

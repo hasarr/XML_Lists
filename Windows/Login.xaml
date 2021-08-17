@@ -7,6 +7,17 @@
         mc:Ignorable="d"
         Title="Login" MinHeight="400"  MinWidth="500" Height="400" Width="500">
     <StackPanel Background="#d96030">
+        
+        <Button Content="Ustawienia" Width="100" HorizontalAlignment="Right" Margin="2" FontSize="13" Padding="3" x:Name="settingsButton" Click="settingsButton_Click">
+            <Button.Resources>
+            <Style TargetType="Button">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Background" Value="#b30000"/>
+                <Setter Property="BorderThickness" Value="0"/>
+            </Style>
+            </Button.Resources>
+        </Button>
+        
         <TextBlock Text="Zaloguj się" FontSize="48" FontFamily="Impact" HorizontalAlignment="Center" Margin="0 30 0 0" Foreground="#faf8f7"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <TextBlock Text="Login" Margin="0 0 20 0" VerticalAlignment="Center" FontSize="24" Foreground="#faf8f7"/>
