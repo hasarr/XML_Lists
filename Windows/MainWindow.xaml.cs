@@ -23,6 +23,7 @@ using System.Threading;
 using System.Security.AccessControl;
 using System.Windows.Controls.Primitives;
 using ES_SYSTEM_K_Listy.Windows;
+using System.Configuration;
 
 namespace ES_SYSTEM_K_Listy
 {
@@ -41,16 +42,57 @@ namespace ES_SYSTEM_K_Listy
             
         #endregion
 
+        private void setDefaultXMLPath()
+        {
+            try
+            {
+                if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\XML_FILES"))
+                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\XML_FILES");
+                
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.Close();
+                return;
+            }
+            Configuration xmlConfig = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            xmlConfig.AppSettings.Settings["XMLPath"].Value = AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\XML_FILES";
+            ConfigurationManager.RefreshSection("appSettings");
+            xmlConfig.Save(ConfigurationSaveMode.Modified);
+            App.Current.Properties["defaultXMLPath"] = xmlConfig.AppSettings.Settings["XMLPath"].Value;
+        }
         /// <summary>
         /// Main Constructor
         /// </summary>
         public MainWindow()
         {
             InitializeComponent();
-           
+            try
+            {
+                if (!Directory.Exists(ConfigurationManager.AppSettings.Get("XMLPath")))
+                {
+                    if (MessageBox.Show("Ścieżka z plikami XML nie została odnaleziona, czy chcesz przywrócić domyślną ścieżkę w folderze z programem?", "UWAGA!", MessageBoxButton.YesNo, MessageBoxImage.Error) == MessageBoxResult.Yes)
+                    {
+                        setDefaultXMLPath();
+                    }
+                    else
+                    {
+                        App.Current.Properties["mainWindowConstructorStatus"] = false;
+                        this.Close();
+                        return;
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "UWAGA!", MessageBoxButton.OK, MessageBoxImage.Error);
 
-            if (App.Current.Properties["defaultXMLPath"].ToString() == "" || App.Current.Properties["defaultXMLPath"] == null)
-                App.Current.Properties["defaultXMLPath"] = AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\XML_FILES";
+            }
+            if (ConfigurationManager.AppSettings.Get("XMLPath") == "" || App.Current.Properties["defaultXMLPath"].ToString() == "")
+            {
+                setDefaultXMLPath();
+            }
             //Create default directories if they dont exist and return true if creation was complete, or false if the program couldnt create the directories, also
             //close the MainWindow if directories weren't created
             if(makeDefaultDirectories(App.Current.Properties["defaultXMLPath"].ToString() + "\\XML")&&
@@ -111,7 +153,7 @@ namespace ES_SYSTEM_K_Listy
             if ((bool)App.Current.Properties["isAdmin"])
             {
                 e.Cancel = true;
-                MessageBox.Show("Aby edytować listę jako admin, wycofaj ją najpierw z publicznych list w panelu admina");
+                MessageBox.Show("Aby edytować listę jako admin, wycofaj ją najpierw z publicznych list w panelu admina", "UWAGA!",MessageBoxButton.OK,MessageBoxImage.Stop);
                 return;
             }
             
@@ -120,7 +162,7 @@ namespace ES_SYSTEM_K_Listy
             {
                 defaultView();
                 refreshUserPage();
-                MessageBox.Show("Lista już nie istnieje");
+                MessageBox.Show("Lista już nie istnieje","UWAGA!",MessageBoxButton.OK,MessageBoxImage.Stop);
                 e.Cancel = true;
                 return;
             }
@@ -180,7 +222,7 @@ namespace ES_SYSTEM_K_Listy
             {
                 defaultView();
                 refreshUserPage();
-                MessageBox.Show("Lista już nie istnieje");
+                MessageBox.Show("Lista już nie istnieje", "UWAGA!", MessageBoxButton.OK, MessageBoxImage.Stop);
                 e.Cancel = true;
                 return;
             }
@@ -218,7 +260,7 @@ namespace ES_SYSTEM_K_Listy
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message.ToString());
+                    MessageBox.Show(ex.Message.ToString(), "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error);
                     e.Cancel = true;
                     defaultView();
                     return;
@@ -283,14 +325,14 @@ namespace ES_SYSTEM_K_Listy
                     }
                     else
                     {
-                        MessageBox.Show("Wystąpił problem z tworzeniem domyślnego katalogu XML, aplikacja nie może działać");
+                        MessageBox.Show("Wystąpił problem z tworzeniem domyślnego katalogu XML, aplikacja nie może działać", "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error);
 
                         return false;
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message.ToString());
+                    MessageBox.Show(ex.Message.ToString(), "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error);
 
                     return false;
                 }
@@ -386,7 +428,7 @@ namespace ES_SYSTEM_K_Listy
             }
             catch(Exception x)
             {
-                MessageBox.Show(x.Message.ToString());
+                MessageBox.Show(x.Message.ToString(), "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error);
                 defaultView();
                 refreshUserPage();
                 return false;
@@ -428,7 +470,7 @@ namespace ES_SYSTEM_K_Listy
                 }
                 catch (Exception x)
                 {
-                    MessageBox.Show(x.Message.ToString());
+                    MessageBox.Show(x.Message, "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error);
                     return false;
                 }
 
@@ -567,7 +609,7 @@ namespace ES_SYSTEM_K_Listy
             {
                 if (!readList(App.Current.Properties["defaultXMLPath"] + "\\XML_Public", endListButton, UserWindowDataGridControl.WideDataGrid, selectedListTextBlock, userListView))
                 { 
-                    MessageBox.Show("Nie udało się odczytać listy, sprawdź czy lista nadal jest dostępna");
+                    MessageBox.Show("Nie udało się odczytać listy, sprawdź czy lista nadal jest dostępna", "UWAGA!", MessageBoxButton.OK, MessageBoxImage.Stop);
                     refreshUserPage();
                 }
             }
@@ -676,11 +718,11 @@ namespace ES_SYSTEM_K_Listy
                         }
                         catch(Exception ex)
                         {
-                            MessageBox.Show("BŁĄD: " + ex.Message.ToString());
+                            MessageBox.Show("BŁĄD: " + ex.Message.ToString(), "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
                     else { 
-                        MessageBox.Show("Nie udało się zapisać, lista o takiej samej nazwie jest już oznaczona jako zakończona");
+                        MessageBox.Show("Nie udało się zapisać, lista o takiej samej nazwie jest już oznaczona jako zakończona", "UWAGA!", MessageBoxButton.OK, MessageBoxImage.Stop);
                         try
                         {
                             File.Delete(App.Current.Properties["defaultXMLPath"] + "\\XML_Public\\" + selectedListTextBlock.Text + ".xml");
@@ -689,13 +731,13 @@ namespace ES_SYSTEM_K_Listy
                         }
                         catch(Exception ex)
                         {
-                            MessageBox.Show("Błąd podczas przetwarzania listy: " + ex.Message.ToString());
+                            MessageBox.Show("Błąd podczas przetwarzania listy: " + ex.Message.ToString(), "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Plik już nie istnieje, lub lista została wycofana");
+                    MessageBox.Show("Plik już nie istnieje, lub lista została wycofana", "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error);
  
                 }
             }

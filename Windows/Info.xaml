@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ES_SYSTEM_K_Listy.Windows"
         mc:Ignorable="d"
-        Title="Info" Height ="250" Width="380" MinHeight="250" MinWidth="380">
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        Title="Info" Height ="250" Width="380" MinHeight="250" MinWidth="380 " Background="{StaticResource secondaryColor}" Foreground="White">
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
 
         <TextBlock  FontSize="20" TextAlignment="Center">
             UWAGA!
@@ -15,8 +15,9 @@
             <LineBreak/>
         </TextBlock>
 
-        <TextBlock Text="Autor: Przemysław Goncerz" FontSize="16" TextAlignment="Center"/>
-        <TextBlock Text="Data wydania: 16.08.2021" FontSize="16" TextAlignment="Center"/>
-        <TextBlock Text="Wersja 0.2 ALPHA" FontSize="16" TextAlignment="Center"/>
+        <TextBlock Text="Autor: Przemysław Goncerz" FontSize="12" TextAlignment="Center" Margin="0 0 0 5"/>
+        <TextBlock Text="Ikona aplikacji wykonana przez  Momenticons na podstawie licencji Creative Commons " FontSize="12" TextAlignment="Center" TextWrapping="WrapWithOverflow" Margin="0 0 0 5"/>
+        <TextBlock Text="Data wydania: 17.08.2021" FontSize="12" TextAlignment="Center"/>
+        <TextBlock Text="Wersja 0.2.1 ALPHA" FontSize="12" TextAlignment="Center"/>
     </StackPanel>
 </Window>

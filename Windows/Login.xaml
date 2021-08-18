@@ -6,19 +6,15 @@
         xmlns:local="clr-namespace:ES_SYSTEM_K_Listy"
         mc:Ignorable="d"
         Title="Login" MinHeight="400"  MinWidth="500" Height="400" Width="500">
-    <StackPanel Background="#d96030">
+    <StackPanel Background="{StaticResource secondaryColor}">
+
+        <Grid Margin="0 20">
+
+            <TextBlock Text="Zaloguj się" FontSize="48" FontFamily="Impact"  Foreground="#faf8f7" HorizontalAlignment="Center"/>
+            <Button Content="Ustawienia" Width="100"   FontSize="13" Padding="3" x:Name="settingsButton" Click="settingsButton_Click" Style="{StaticResource classicButton}"
+                    HorizontalAlignment="Right"/>
+        </Grid>
         
-        <Button Content="Ustawienia" Width="100" HorizontalAlignment="Right" Margin="2" FontSize="13" Padding="3" x:Name="settingsButton" Click="settingsButton_Click">
-            <Button.Resources>
-            <Style TargetType="Button">
-                <Setter Property="Foreground" Value="White"/>
-                <Setter Property="Background" Value="#b30000"/>
-                <Setter Property="BorderThickness" Value="0"/>
-            </Style>
-            </Button.Resources>
-        </Button>
-        
-        <TextBlock Text="Zaloguj się" FontSize="48" FontFamily="Impact" HorizontalAlignment="Center" Margin="0 30 0 0" Foreground="#faf8f7"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <TextBlock Text="Login" Margin="0 0 20 0" VerticalAlignment="Center" FontSize="24" Foreground="#faf8f7"/>
             <TextBox x:Name="loginInput" Width="200"  Margin="0 30" Height="35" Padding="5">
@@ -43,8 +39,7 @@
             </PasswordBox>
         </StackPanel>
 
-        <Button x:Name="loginSubmitButton" Click="loginSubmitButton_Click"  Content="Zaloguj" Width="400px" Height="50px" BorderThickness="3" BorderBrush="#ed601a" 
-                Foreground="#faf8f7" Background="#cc4502" FontSize="24">
+        <Button x:Name="loginSubmitButton" Click="loginSubmitButton_Click"  Content="Zaloguj" Width="400px" Height="50px" Foreground="#faf8f7" Background="{StaticResource primaryButtonColor}" FontSize="24" BorderThickness="0">
             <Button.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="15"/>

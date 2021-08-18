@@ -2,6 +2,7 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
@@ -27,91 +28,7 @@ namespace ES_SYSTEM_K_Listy
         public Login()
         {
             InitializeComponent();
-            string XMLPath = AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\XML_Folder_Location_Setting.txt";
-            if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\XML_Folder_Location_Setting.txt"))
-            {
-                try
-                {
-
-                    using (StreamWriter writer = new StreamWriter(XMLPath, false))
-                    {
-                        writer.Write(AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\XML_FILES");
-                        App.Current.Properties["defaultXMLPath"] = AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\XML_FILES";
-                        writer.Close();
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Nie można wygenerować pliku ustawień, aplikacja nie może działać: " + ex.ToString());
-
-                    return;
-                }
-            }
-            else if (File.Exists(AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\XML_Folder_Location_Setting.txt"))
-            {
-
-                try
-                {
-                    // Open the text file using a stream reader.
-                    var sr = new StreamReader(AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\XML_Folder_Location_Setting.txt");
-                    
-                        string path = sr.ReadLine();
-                        //Check if the path is valid directory
-                        if (Directory.Exists(path))
-                        {
-                            // Read the stream as a string and set the path of XML files
-                            App.Current.Properties["defaultXMLPath"] = path;
-                            sr.Close();
-
-                        using (StreamWriter writer = new StreamWriter(XMLPath, false))
-                        {
-                            writer.Write(path);
-                            App.Current.Properties["defaultXMLPath"] = path;
-                            writer.Close();
-                        }
-                    }
-                    
-                        else
-                        { 
-                                MessageBox.Show("Bład formatu ściezki w pliku XML_Folder_Location_Setting.txt lub ścieżka nie istnieje. Aplikacja przywróci domyślną lokalizacje folderu XML", "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error);
-                                sr.Close();
-                            try
-                            {
-                                using (StreamWriter writer = new StreamWriter(XMLPath, false))
-                                {
-                                    writer.Write(AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\XML_FILES");
-                                    App.Current.Properties["defaultXMLPath"] = AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\XML_FILES";
-                                    writer.Close();
-                                }
-                           
-
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show("Błąd podczas edycji pliku XML_Folder_Location_Setting.txt przez program, przywrócono domyślną ścieżkę: " + ex.Message, "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error);
-                                    App.Current.Properties["defaultXMLPath"] = AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\XML_FILES";
-                                }
-
-                        }
-
-                    
-
-                    
-                } 
-                catch (IOException ex)
-                {
-                    MessageBox.Show("The XML settings file could not be read, XML path restored to default: " + ex.Message);
-                    App.Current.Properties["defaultXMLPath"] = AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\XML_FILES";
-                }
-
-            }
-            else
-            {
-                //Set default XML folders path if the path is not set by user
-                App.Current.Properties["defaultXMLPath"] = AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\XML_FILES";
-            }
-
+            App.Current.Properties["defaultXMLPath"] = ConfigurationManager.AppSettings.Get("XMLPath");
 
         }
 

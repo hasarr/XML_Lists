@@ -69,7 +69,7 @@ namespace ES_SYSTEM_K_Listy
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("BŁĄD: " + ex.Message.ToString());
+                        MessageBox.Show("BŁĄD: " + ex.Message.ToString(), "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error);
                         deleteList(listPath);
                         refreshAdminPage();
                         defaultView();
@@ -122,7 +122,7 @@ namespace ES_SYSTEM_K_Listy
                 }
                 else
                 {
-                    MessageBox.Show("Wystąpił błąd z wyborem list, czy lista nadal znajduje się w katalogu?");
+                    MessageBox.Show("Wystąpił błąd z wyborem list, czy lista nadal znajduje się w katalogu?", "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error);
                     refreshAdminPage();
                     defaultView();
                 }
@@ -149,7 +149,7 @@ namespace ES_SYSTEM_K_Listy
                     }
                     catch(Exception ex)
                     {
-                        MessageBox.Show("BŁĄD: " + ex.Message.ToString());
+                        MessageBox.Show("BŁĄD: " + ex.Message.ToString(), "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error);
                         return false;
                     }
                     return true;
@@ -329,7 +329,7 @@ namespace ES_SYSTEM_K_Listy
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message.ToString());
+                    MessageBox.Show(ex.Message.ToString(), "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error);
                     refreshAdminPage();
                     defaultView();
                     return false;
@@ -338,7 +338,7 @@ namespace ES_SYSTEM_K_Listy
             }
             else 
             {
-                MessageBox.Show("Nie przeniesiono");
+                MessageBox.Show("Nie przeniesiono","UWAGA!",MessageBoxButton.OK,MessageBoxImage.Hand);
                 return false; 
             }
         }
@@ -357,7 +357,7 @@ namespace ES_SYSTEM_K_Listy
                 }
                 catch(Exception ex)
                 {
-                    MessageBox.Show(ex.Message.ToString());
+                    MessageBox.Show(ex.Message.ToString(), "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
@@ -379,16 +379,16 @@ namespace ES_SYSTEM_K_Listy
             else if (listStatusTextBlock.Text == "Status: zakończona") path = App.Current.Properties["defaultXMLPath"] + "\\XML_Done\\" + selectedListTextBlock.Text + ".xml";
             else
             {
-                MessageBox.Show("Wystąpił nieznany błąd. Sprawdź lokalizacje pliku");
+                MessageBox.Show("Wystąpił nieznany błąd. Sprawdź lokalizacje pliku","BŁĄD",MessageBoxButton.OK,MessageBoxImage.Error);
                 return;
             }
             if (deleteList(path))
             { 
-                MessageBox.Show("Usunięto pomyślnie");
+                MessageBox.Show("Usunięto pomyślnie","INFORMACJA",MessageBoxButton.OK,MessageBoxImage.Information);
                 defaultView();
                 refreshAdminPage();
             }
-            else MessageBox.Show("Nie udało się usunąć");
+            else MessageBox.Show("Nie udało się usunąć","UWAGA!",MessageBoxButton.OK,MessageBoxImage.Error);
 
             
             
@@ -406,11 +406,11 @@ namespace ES_SYSTEM_K_Listy
             {
                 dt.WriteXml(file,
               XmlWriteMode.WriteSchema, false);
-                MessageBox.Show("Zapisano zmiany");
+                MessageBox.Show("Zapisano zmiany","INFORMACJA",MessageBoxButton.OK,MessageBoxImage.Information);
             }
             catch(Exception ex)
             {
-                MessageBox.Show("BŁĄD: " + ex.Message.ToString());
+                MessageBox.Show("BŁĄD: " + ex.Message.ToString(),"BŁĄD",MessageBoxButton.OK,MessageBoxImage.Error);
             }
         }
     }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ES_SYSTEM_K_Listy.UserControls"
         mc:Ignorable="d"
-        Title="AdminPanel" MinHeight="500" MinWidth="900" Height="500" Width="900">
+        Title="Panel Administratora" MinHeight="500" MinWidth="900" Height="500" Width="900">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -64,28 +64,14 @@
         <Rectangle Grid.Column="3" Grid.Row="0" Fill="#5896a1"/>
 
         <TextBlock Text="Nie wybrano listy" Grid.Column="3" Grid.Row="0" FontSize="25" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="selectedListTextBlock"/>
-        <Button Grid.Column="3" HorizontalAlignment="Left" Content="Odśwież listy" Height="30" Grid.Row="0" x:Name="refreshButton" Click="refreshButton_Click" Margin="5">
-            <Button.Resources>
-                <Style TargetType="Button">
-                    <Setter Property="Foreground" Value="White"/>
-                    <Setter Property="Background" Value="#115763"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="Padding" Value="4"/>
-                </Style>
-            </Button.Resources>
-        </Button>
+        <Button Grid.Column="3" HorizontalAlignment="Left" Content="Odśwież listy"  Grid.Row="0" x:Name="refreshButton" Click="refreshButton_Click"  Style="{StaticResource classicButton}"/>
 
-        <Button Content="Dodaj listę" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Right" Padding="5"  Margin="5" x:Name="addListButton"
-                Click="addListButton_Click" Height="30">
-            <Button.Resources>
-                <Style TargetType="Button">
-                    <Setter Property="Foreground" Value="White"/>
-                    <Setter Property="Background" Value="#115763"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="Padding" Value="4"/>
-                </Style>
-            </Button.Resources>
-        </Button>
+
+
+        <Button Content="Dodaj listę" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Right"  x:Name="addListButton"
+                Click="addListButton_Click" Style="{StaticResource classicButton}"/>
+
+
 
 
         <Grid Grid.Row="3" Grid.Column="3" Background="GhostWhite" MinHeight="1">
@@ -96,39 +82,17 @@
             <local:UserControlDataGrid CanUserAddRows="False" x:Name="adminDataGrid"/>
             
                 <StackPanel Grid.Row="1">
-                <Button Content="Zapisz zmiany" x:Name="saveListButton" Margin="5" Visibility="Hidden" Click="saveListButton_Click">
-                    <Button.Resources>
-                        <Style TargetType="Button">
-                            <Setter Property="Foreground" Value="White"/>
-                            <Setter Property="Background" Value="#115763"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="Padding" Value="4"/>
-                        </Style>
-                    </Button.Resources>
-                </Button>
-            
+                <Button Content="Zapisz zmiany" x:Name="saveListButton" Margin="5" Visibility="Visible" Click="saveListButton_Click" Style="{StaticResource wideButton}" Height="30"/>
+
+
+
                 <TextBlock Text="Status: "  Margin="5" x:Name="listStatusTextBlock" Visibility="Hidden" FontSize="16"/>
-            
-                <Button  Content="" Margin="5" Visibility="Hidden" x:Name="flexibleAdminButton" Click="flexibleAdminButton_Click">
-                    <Button.Resources>
-                        <Style TargetType="Button">
-                            <Setter Property="Foreground" Value="White"/>
-                            <Setter Property="Background" Value="#115763"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="Padding" Value="4"/>
-                        </Style>
-                    </Button.Resources>
-                </Button>
-                <Button Content="Usuń listę" x:Name="deleteListButton" Margin="5" Visibility="Hidden" Click="deleteListButton_Click">
-                    <Button.Resources>
-                        <Style TargetType="Button">
-                            <Setter Property="Foreground" Value="White"/>
-                            <Setter Property="Background" Value="#115763"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="Padding" Value="4"/>
-                        </Style>
-                    </Button.Resources>
-                </Button>
+
+                <Button  Content="" Margin="5" Visibility="Hidden" x:Name="flexibleAdminButton" Click="flexibleAdminButton_Click" Style="{StaticResource wideButton}" Height="30"/>
+
+                <Button Content="Usuń listę" x:Name="deleteListButton" Margin="5" Visibility="Hidden" Click="deleteListButton_Click" Style="{StaticResource wideButton}" Height="30"/>
+
+
             </StackPanel>
         </Grid>
         <Frame x:Name="mainFrame"  Grid.Row="1" Grid.Column="3"  />

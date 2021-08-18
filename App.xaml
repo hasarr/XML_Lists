@@ -5,6 +5,50 @@
              StartupUri="Windows\Login.xaml"
              >
     <Application.Resources>
-         
+
+        <SolidColorBrush x:Key="primaryButtonColor" Color="#b30000" />
+        <SolidColorBrush x:Key="secondaryButtonColor" Color="#206091"/>
+        <SolidColorBrush x:Key="primaryColor" Color="#e88a2c" />
+        <SolidColorBrush x:Key="secondaryColor" Color="#d45b19" />
+        
+        <Style TargetType="Button" x:Key="classicButton">
+
+             <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="{StaticResource primaryButtonColor}"/>
+             <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Margin" Value="10 10 10 10"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="12"/>
+            
+            <Style.Resources >
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="10"/>
+                </Style>
+            </Style.Resources>
+            
+        </Style>
+
+        <Style TargetType="Button" x:Key="wideButton">
+
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="{StaticResource secondaryButtonColor}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Margin" Value="10 10 10 10"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="12"/>
+
+            <Style.Resources >
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="10"/>
+                </Style>
+            </Style.Resources>
+
+        </Style>
+        
+
     </Application.Resources>
 </Application>
