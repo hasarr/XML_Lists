@@ -9,7 +9,7 @@
     <Grid>
         
         <DataGrid AutoGenerateColumns="True" 
-        CanUserAddRows="{Binding CanUserAddRows}" AlternatingRowBackground="#cccbca" RowBackground="#e6e6e6" Background="#c9c9c9"
+        CanUserAddRows="{Binding CanUserAddRows}" AlternatingRowBackground="#cccbca" RowBackground="#e6e6e6" Background="#ededed"
          CanUserResizeColumns="False" x:Name="WideDataGrid" ItemsSource="{Binding ItemsSourceContent}" DataContext="{Binding DataContextContent}" 
                   CanUserReorderColumns="false" BeginningEdit="WideDataGrid_BeginningEdit" CellEditEnding="WideDataGrid_CellEditEnding">
 

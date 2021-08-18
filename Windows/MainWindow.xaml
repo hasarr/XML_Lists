@@ -23,7 +23,7 @@
         </Grid.RowDefinitions>
 
         <Rectangle Grid.Row="0" Grid.Column="0" Fill="#c94036" />
-        <Rectangle Grid.Column="1" Grid.Row="1" Fill="#c9c9c9"/>
+        <Rectangle Grid.Column="1" Grid.Row="1" Fill="#ededed"/>
         
         <TextBlock Text="Dostępne listy produkcyjne:" TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"  FontSize="16" Foreground="#fff"/>
 
@@ -58,7 +58,7 @@
         </Button>
 
         <local:UserControlDataGrid  Grid.Row="1" Grid.Column="1"  CanUserAddRows="False" 
-                                x:Name="UserWindowDataGridControl" Margin=" 0 0 0 47" />
+                                x:Name="UserWindowDataGridControl" Margin=" 0 0 0 65" />
 
 
         <Button Content="Zakończ" Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" Margin="10" Visibility="Visible" 
