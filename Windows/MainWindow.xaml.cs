@@ -1,45 +1,29 @@
-﻿using System;
+﻿using ES_SYSTEM_K_Listy.Windows;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Microsoft.Win32;
-using System.Data;
-using Excel = Microsoft.Office.Interop.Excel;
-using System.IO;
-using ExcelDataReader;
 using Path = System.IO.Path;
-using System.Collections.ObjectModel;
-using System.Threading;
-using System.Security.AccessControl;
-using System.Windows.Controls.Primitives;
-using ES_SYSTEM_K_Listy.Windows;
-using System.Configuration;
 
 namespace ES_SYSTEM_K_Listy
 {
 
-   
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-     
         #region GlobalVariables
-            DataSet defaultData = new DataSet();
+        DataSet defaultData = new DataSet();
         FileSystemWatcher fileWatcher = new();
         private List<string> sortDirections = new List<string>();
-            
+
         #endregion
 
         private void setDefaultXMLPath()
@@ -48,9 +32,9 @@ namespace ES_SYSTEM_K_Listy
             {
                 if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\XML_FILES"))
                     Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\XML_FILES");
-                
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error);
                 this.Close();
@@ -61,6 +45,34 @@ namespace ES_SYSTEM_K_Listy
             ConfigurationManager.RefreshSection("appSettings");
             xmlConfig.Save(ConfigurationSaveMode.Modified);
             App.Current.Properties["defaultXMLPath"] = xmlConfig.AppSettings.Settings["XMLPath"].Value;
+        }
+
+        private void setDefaultProgramsPath()
+        {
+            try
+            {
+                if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\Programy\\TC2000R"))
+                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\Programy\\TC2000R");
+
+                if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\Programy\\TC5000R"))
+                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\Programy\\TC5000R");
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.Close();
+                return;
+            }
+
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            config.AppSettings.Settings["TC2ProgramsPath"].Value = AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\Programy\\TC2000R";
+            config.AppSettings.Settings["TC5ProgramsPath"].Value = AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\Programy\\TC5000R";
+            ConfigurationManager.RefreshSection("appSettings");
+            config.Save(ConfigurationSaveMode.Modified);
+
+            App.Current.Properties["TC2ProgramsPath"] = config.AppSettings.Settings["TC2ProgramsPath"].Value;
+            App.Current.Properties["TC5ProgramsPath"] = config.AppSettings.Settings["TC5ProgramsPath"].Value;
         }
         /// <summary>
         /// Main Constructor
@@ -83,8 +95,22 @@ namespace ES_SYSTEM_K_Listy
                         return;
                     }
                 }
+
+                if (!(Directory.Exists(ConfigurationManager.AppSettings.Get("TC2ProgramsPath")) || Directory.Exists(ConfigurationManager.AppSettings.Get("TC5ProgramsPath"))))
+                {
+                    if (MessageBox.Show("Ścieżka z programami nie została odnaleziona, czy chcesz przywrócić domyślną ścieżkę w folderze z programem?", "UWAGA!", MessageBoxButton.YesNo, MessageBoxImage.Error) == MessageBoxResult.Yes)
+                    {
+                        setDefaultProgramsPath();
+                    }
+                    else
+                    {
+                        App.Current.Properties["mainWindowConstructorStatus"] = false;
+                        this.Close();
+                        return;
+                    }
+                }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "UWAGA!", MessageBoxButton.OK, MessageBoxImage.Error);
 
@@ -95,15 +121,16 @@ namespace ES_SYSTEM_K_Listy
             }
             //Create default directories if they dont exist and return true if creation was complete, or false if the program couldnt create the directories, also
             //close the MainWindow if directories weren't created
-            if(makeDefaultDirectories(App.Current.Properties["defaultXMLPath"].ToString() + "\\XML")&&
-            makeDefaultDirectories(App.Current.Properties["defaultXMLPath"].ToString() + "\\XML_Public")&&
+            if (makeDefaultDirectories(App.Current.Properties["defaultXMLPath"].ToString() + "\\XML") &&
+            makeDefaultDirectories(App.Current.Properties["defaultXMLPath"].ToString() + "\\XML_Public") &&
             makeDefaultDirectories(App.Current.Properties["defaultXMLPath"].ToString() + "\\XML_Done"))
-             {
+            {
                 App.Current.Properties["mainWindowConstructorStatus"] = true;
             }
-            else {
+            else
+            {
                 App.Current.Properties["mainWindowConstructorStatus"] = false;
-                MessageBox.Show("Nie można uruchomić programu, błąd podczas ustalania domyślnych ścieżek XML, sprawdź uprawnienia","BŁĄD!",MessageBoxButton.OK,MessageBoxImage.Error); this.Close(); return;
+                MessageBox.Show("Nie można uruchomić programu, błąd podczas ustalania domyślnych ścieżek XML, sprawdź uprawnienia", "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error); this.Close(); return;
             }
 
             refreshUserPage();
@@ -136,7 +163,7 @@ namespace ES_SYSTEM_K_Listy
             {
                 try
                 {
-                        return dataGridName.Columns[indexOfColumn].GetCellContent(Row).Parent as DataGridCell;
+                    return dataGridName.Columns[indexOfColumn].GetCellContent(Row).Parent as DataGridCell;
 
                 }
                 catch (Exception)
@@ -153,23 +180,23 @@ namespace ES_SYSTEM_K_Listy
             if ((bool)App.Current.Properties["isAdmin"])
             {
                 e.Cancel = true;
-                MessageBox.Show("Aby edytować listę jako admin, wycofaj ją najpierw z publicznych list w panelu admina", "UWAGA!",MessageBoxButton.OK,MessageBoxImage.Stop);
+                MessageBox.Show("Aby edytować listę jako admin, wycofaj ją najpierw z publicznych list w panelu admina", "UWAGA!", MessageBoxButton.OK, MessageBoxImage.Stop);
                 return;
             }
-            
+
             string filePath = App.Current.Properties["defaultXMLPath"] + "\\XML_Public\\" + selectedListTextBlock.Text + ".xml";
             if (!File.Exists(filePath))
             {
                 defaultView();
                 refreshUserPage();
-                MessageBox.Show("Lista już nie istnieje","UWAGA!",MessageBoxButton.OK,MessageBoxImage.Stop);
+                MessageBox.Show("Lista już nie istnieje", "UWAGA!", MessageBoxButton.OK, MessageBoxImage.Stop);
                 e.Cancel = true;
                 return;
             }
 
             if (e.Column.Header.ToString() == "Zaczęte" || e.Column.Header.ToString() == "Zakończone")
             {
-                //get index of who started column
+                //get index of columns
                 var whoStartedColumn = UserWindowDataGridControl.WideDataGrid.Columns.FirstOrDefault(column => column.Header.ToString() == "Kto zaczął");
                 var indexWhoStarted = UserWindowDataGridControl.WideDataGrid.Columns.IndexOf(whoStartedColumn);
                 var endedColumn = UserWindowDataGridControl.WideDataGrid.Columns.FirstOrDefault(column => column.Header.ToString() == "Zakończone");
@@ -188,13 +215,13 @@ namespace ES_SYSTEM_K_Listy
 
                 string whoStartedCellValue = ((TextBlock)whoStartedCell.Content).Text;
 
-                
+
 
                 if (whoStartedCellValue.ToString() == string.Empty || whoStartedCellValue.ToString() == App.Current.Properties["username"].ToString())
                 {
                     if (e.Column.Header.ToString() == "Zaczęte" && endedColumnValue == false)
                     {
-                        e.Cancel = false; 
+                        e.Cancel = false;
                     }
                     else if (e.Column.Header.ToString() == "Zakończone" && startedColumnValue == true)
                     {
@@ -209,7 +236,7 @@ namespace ES_SYSTEM_K_Listy
                 {
                     e.Cancel = true;
                 }
-                
+
             }
             else e.Cancel = true;
         }
@@ -218,7 +245,7 @@ namespace ES_SYSTEM_K_Listy
         private void UserWindowDataGridControl_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             string filePath = App.Current.Properties["defaultXMLPath"] + "\\XML_Public\\" + selectedListTextBlock.Text + ".xml";
-            if(!File.Exists(filePath))
+            if (!File.Exists(filePath))
             {
                 defaultView();
                 refreshUserPage();
@@ -249,7 +276,7 @@ namespace ES_SYSTEM_K_Listy
                     DataTable dt = (dataGridItems).ToTable();
 
                     //save WhoStartedValue if saveWhoStartedValue is true
-                    if(saveWhoStartedValue) dt.Rows[e.Row.GetIndex()][indexWhoStarted] = whoStartedValue;
+                    if (saveWhoStartedValue) dt.Rows[e.Row.GetIndex()][indexWhoStarted] = whoStartedValue;
                     //save value for cell
                     dt.Rows[e.Row.GetIndex()][e.Column.DisplayIndex] = valueToSave;
                     dataGridItems = dt.DefaultView;
@@ -267,41 +294,41 @@ namespace ES_SYSTEM_K_Listy
                 }
             }
 
-            
 
-                if (whoStartedCellValue.ToString() == string.Empty || whoStartedCellValue.ToString() == App.Current.Properties["username"].ToString())
+
+            if (whoStartedCellValue.ToString() == string.Empty || whoStartedCellValue.ToString() == App.Current.Properties["username"].ToString())
+            {
+                if (e.Column.Header.ToString() == "Zaczęte" || e.Column.Header.ToString() == "Zakończone")
                 {
-                    if (e.Column.Header.ToString() == "Zaczęte" || e.Column.Header.ToString() == "Zakończone")
+
+                    bool currentCellValue = ((CheckBox)currentCell.Content).IsChecked.Value;
+
+
+                    if (currentCellValue && e.Column.Header.ToString() == "Zaczęte")
                     {
-                    
-                        bool currentCellValue = ((CheckBox)currentCell.Content).IsChecked.Value;
-
-
-                        if (currentCellValue && e.Column.Header.ToString() == "Zaczęte")
-                        {
-                            saveData(true, App.Current.Properties["username"].ToString(), true);
-                        }
-                        else if (currentCellValue == false && App.Current.Properties["username"].ToString() == whoStartedCellValue && e.Column.Header.ToString() == "Zaczęte")
-                        {
-                            saveData(false, string.Empty, true);
-                        }
-                        else if (currentCellValue && e.Column.Header.ToString() == "Zakończone")
-                        {
-                            saveData(true, string.Empty, false);
-                        }
-                        else if (currentCellValue == false && e.Column.Header.ToString() == "Zakończone")
-                        {
-                            saveData(false, string.Empty, false);
-                        }
-
-
+                        saveData(true, App.Current.Properties["username"].ToString(), true);
                     }
-                    
+                    else if (currentCellValue == false && App.Current.Properties["username"].ToString() == whoStartedCellValue && e.Column.Header.ToString() == "Zaczęte")
+                    {
+                        saveData(false, string.Empty, true);
+                    }
+                    else if (currentCellValue && e.Column.Header.ToString() == "Zakończone")
+                    {
+                        saveData(true, string.Empty, false);
+                    }
+                    else if (currentCellValue == false && e.Column.Header.ToString() == "Zakończone")
+                    {
+                        saveData(false, string.Empty, false);
+                    }
+
 
                 }
-                else e.Cancel = true;
-            
- 
+
+
+            }
+            else e.Cancel = true;
+
+
         }
 
 
@@ -320,7 +347,7 @@ namespace ES_SYSTEM_K_Listy
 
                     if (Directory.Exists(defaultXmlFolderPath))
                     {
-                   
+
                         return true;
                     }
                     else
@@ -336,7 +363,7 @@ namespace ES_SYSTEM_K_Listy
 
                     return false;
                 }
-            else if (Directory.Exists(defaultXmlFolderPath)) return true; 
+            else if (Directory.Exists(defaultXmlFolderPath)) return true;
 
             else return false;
         }
@@ -348,9 +375,9 @@ namespace ES_SYSTEM_K_Listy
         /// <param name="path">full path of a XML file with a name and .xml extension</param>
         private void CreateFileWatcher(string path)
         {
-            
+
             fileWatcher.Path = path;
-            fileWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.LastAccess | NotifyFilters.Size | NotifyFilters.FileName ;
+            fileWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.LastAccess | NotifyFilters.Size | NotifyFilters.FileName;
             fileWatcher.Filter = "*.xml";
             fileWatcher.Changed += FileWatcher_Changed;
             fileWatcher.Deleted += FileWatcher_Deleted; ;
@@ -377,8 +404,8 @@ namespace ES_SYSTEM_K_Listy
                         refreshDataGrid(UserWindowDataGridControl.WideDataGrid, userListView, App.Current.Properties["defaultXMLPath"] + "\\XML_Public");
                         refreshUserPage();
                     }
-                    
-                    
+
+
                     return;
                 }
                 catch (Exception)
@@ -404,7 +431,7 @@ namespace ES_SYSTEM_K_Listy
                      refreshUserPage();
                      return;
                  }
-                 catch(Exception)
+                 catch (Exception)
                  {
                      return;
                  }
@@ -423,10 +450,10 @@ namespace ES_SYSTEM_K_Listy
             defaultView();
             if (!File.Exists(fullPath)) { defaultView(); return false; }
             try
-            { 
-                file = File.Open(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite); 
+            {
+                file = File.Open(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             }
-            catch(Exception x)
+            catch (Exception x)
             {
                 MessageBox.Show(x.Message.ToString(), "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error);
                 defaultView();
@@ -439,11 +466,11 @@ namespace ES_SYSTEM_K_Listy
             dataGridName.Visibility = Visibility.Visible;
             dataGridName.Columns.Clear();
             refreshDataGrid(dataGridName, selectedList, path);
-            
+
             file.Close();
             return true;
         }
-       
+
         /// <summary>
         /// Refresh dataGrid
         /// </summary>
@@ -499,8 +526,8 @@ namespace ES_SYSTEM_K_Listy
             //check if user is selecting a new list or refreshing
             if (selectedList.SelectedItem != null && selectedListTextBlock.Text == "Nie wybrano listy")
             {
-                
-    
+
+
 
                 if (transferFileToDatagrid(path + "\\" + selectedList.SelectedItem.ToString() + ".xml")) selectedListTextBlock.Text = selectedList.SelectedItem.ToString();
                 else return;
@@ -580,7 +607,7 @@ namespace ES_SYSTEM_K_Listy
             else return;
 
 
-            
+
 
             foreach (DataGridColumn column in dataGridName.Columns)
             {
@@ -595,8 +622,8 @@ namespace ES_SYSTEM_K_Listy
             dataGridName.Columns[dataGridName.Columns.IndexOf(endedColumn)].IsReadOnly = false;
             dataGridName.Columns[dataGridName.Columns.IndexOf(startedColumn)].IsReadOnly = false;
 
-            
-            
+
+
         }
 
 
@@ -604,11 +631,11 @@ namespace ES_SYSTEM_K_Listy
         private void userListViewItemClick(object sender, MouseButtonEventArgs e)
         {
             var item = sender as ListViewItem;
-            
+
             if (item != null && item.IsSelected)
             {
                 if (!readList(App.Current.Properties["defaultXMLPath"] + "\\XML_Public", endListButton, UserWindowDataGridControl.WideDataGrid, selectedListTextBlock, userListView))
-                { 
+                {
                     MessageBox.Show("Nie udało się odczytać listy, sprawdź czy lista nadal jest dostępna", "UWAGA!", MessageBoxButton.OK, MessageBoxImage.Stop);
                     refreshUserPage();
                 }
@@ -619,10 +646,10 @@ namespace ES_SYSTEM_K_Listy
         //refresh all lists
         private async void refreshUserPage()
         {
-            
+
             userListView.Items.Clear();
-            string[] xmlAdminFiles = Directory.GetFiles(App.Current.Properties["defaultXMLPath"]  + "\\XML_Public\\");
-            if(xmlAdminFiles.Length == 0)
+            string[] xmlAdminFiles = Directory.GetFiles(App.Current.Properties["defaultXMLPath"] + "\\XML_Public\\");
+            if (xmlAdminFiles.Length == 0)
             {
                 defaultView();
                 return;
@@ -632,7 +659,7 @@ namespace ES_SYSTEM_K_Listy
                 string buffer = Path.GetFileName(x);
                 buffer = buffer.Remove(buffer.Length - 4);
                 userListView.Items.Add(buffer);
-               
+
             }
         }
 
@@ -642,12 +669,13 @@ namespace ES_SYSTEM_K_Listy
         /// </summary>
         private async void defaultView()
         {
+
             UserWindowDataGridControl.WideDataGrid.Columns.Clear();
             UserWindowDataGridControl.WideDataGrid.Visibility = Visibility.Hidden;
             endListButton.Visibility = Visibility.Hidden;
             selectedListTextBlock.Text = "Nie wybrano listy";
         }
-        
+
 
         private void admin_panel_button_Click(object sender, RoutedEventArgs e)
         {
@@ -677,12 +705,12 @@ namespace ES_SYSTEM_K_Listy
 
             int i = 0;
             //check every row for False value in columnToCheck
-            foreach(DataRowView x in dataGridName.Items)
+            foreach (DataRowView x in dataGridName.Items)
             {
                 string currentCellValue = columnToCheck.GetCellContent(dataGridName.Items[i]).ToString();
                 if (currentCellValue.Contains("False"))
                 {
-                    MessageBox.Show("Nie oznaczono wszystkich detali jako zakończone","UWAGA!",MessageBoxButton.OK,MessageBoxImage.Stop);
+                    MessageBox.Show("Nie oznaczono wszystkich detali jako zakończone", "UWAGA!", MessageBoxButton.OK, MessageBoxImage.Stop);
                     return false;
                 }
                 i++;
@@ -699,13 +727,13 @@ namespace ES_SYSTEM_K_Listy
         private void endListButton_Click(object sender, RoutedEventArgs e)
         {
             var endedColumn = UserWindowDataGridControl.WideDataGrid.Columns.FirstOrDefault(c => c.Header.ToString() == "Zakończone");
-            
+
 
             if (MessageBox.Show("Czy na pewno chcesz zakończyć listę? Nie można tego cofnąć", "UWAGA!!",
                            MessageBoxButton.YesNoCancel, MessageBoxImage.Warning) == MessageBoxResult.Yes
                            && checkForEnded(UserWindowDataGridControl.WideDataGrid, endedColumn))
             {
-                
+
                 if (File.Exists(App.Current.Properties["defaultXMLPath"] + "\\XML_Public\\" + selectedListTextBlock.Text + ".xml"))
                 {
                     if (!File.Exists(App.Current.Properties["defaultXMLPath"] + "\\XML_Done\\" + selectedListTextBlock.Text + ".xml"))
@@ -716,12 +744,13 @@ namespace ES_SYSTEM_K_Listy
                             defaultView();
                             refreshUserPage();
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             MessageBox.Show("BŁĄD: " + ex.Message.ToString(), "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
-                    else { 
+                    else
+                    {
                         MessageBox.Show("Nie udało się zapisać, lista o takiej samej nazwie jest już oznaczona jako zakończona", "UWAGA!", MessageBoxButton.OK, MessageBoxImage.Stop);
                         try
                         {
@@ -729,7 +758,7 @@ namespace ES_SYSTEM_K_Listy
                             defaultView();
                             refreshUserPage();
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             MessageBox.Show("Błąd podczas przetwarzania listy: " + ex.Message.ToString(), "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
@@ -738,14 +767,14 @@ namespace ES_SYSTEM_K_Listy
                 else
                 {
                     MessageBox.Show("Plik już nie istnieje, lub lista została wycofana", "BŁĄD!", MessageBoxButton.OK, MessageBoxImage.Error);
- 
+
                 }
             }
             else
-            {      
+            {
                 return;
             }
-            
+
         }
 
 
@@ -756,6 +785,6 @@ namespace ES_SYSTEM_K_Listy
         }
     }
 }
-    
+
 
 

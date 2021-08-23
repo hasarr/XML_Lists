@@ -3,31 +3,31 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ES_SYSTEM_K_Listy.Windows"
+        xmlns:local="clr-namespace:ES_SYSTEM_K_Listy.UserControls"
         mc:Ignorable="d"
-        Title="Ustawienia" Height="300" Width="700">
+        Title="Ustawienia" MinHeight="350" MinWidth="700" Height="350" Width="700">
     <Grid Background="{StaticResource primaryColor}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition/>
+
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="70"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="60"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-
-
-        <Border  VerticalAlignment="Stretch"  Background="{StaticResource secondaryButtonColor}" >
-            <TextBlock Text="Lokalizacja katalogu z plikami XML: " Height="20" VerticalAlignment="Center" TextAlignment="Center"  Foreground="White" FontSize="14"/>
-        </Border>
+        <local:SettingSkin SettingText="Lokalizacja katalogu z plikami XML: " Grid.Row="0"  x:Name="XMLFolderSettingControl"/>
         
-        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1">
-            <TextBox IsReadOnly="True"  Height="30" x:Name="XMLLocationTextBox" Background="{StaticResource primaryButtonColor}" Foreground="White" 
-                     BorderThickness="1" BorderBrush="{StaticResource secondaryButtonColor}" Padding="5"/>
-            <Button Content="Wybierz folder" Click="SelectFolderButton_Click" x:Name="SelectFolderButton" Style="{StaticResource wideButton}" Height="20" Padding="0"/>
+        <local:SettingSkin SettingText="Lokalizacja katalogu z programami na TC2: " Grid.Row="1" x:Name="TC2ProgramsSettingControl"/>
+        
+        <local:SettingSkin SettingText="Lokalizacja katalogu z programami na TC5: " Grid.Row="2" x:Name="TC5ProgramsSettingControl"/>
+        
+        <StackPanel Grid.ColumnSpan="2" Grid.Row="3" VerticalAlignment="Bottom">
+            <Button Content="Zapisz"  Height="40"  x:Name="saveButton" Click="saveButton_Click" Style="{StaticResource classicButton}" Margin="5"/>
+            <Button Content="Resetuj" Height="40"  x:Name="resetButton" Click="resetButton_Click" Style="{StaticResource classicButton}" Margin="5"/>
         </StackPanel>
-        <Button Content="Zapisz" Grid.ColumnSpan="2" Grid.Row="1" Height="40" VerticalAlignment="Bottom" x:Name="saveButton" Click="saveButton_Click" Style="{StaticResource classicButton}"/>
     </Grid>
 </Window>

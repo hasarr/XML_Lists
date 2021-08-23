@@ -58,8 +58,7 @@
         </Button>
 
         <local:UserControlDataGrid  Grid.Row="1" Grid.Column="1"  CanUserAddRows="False" 
-                                x:Name="UserWindowDataGridControl" Margin=" 0 0 0 65" />
-
+                                x:Name="UserWindowDataGridControl" Margin=" 0 0 0 65" /> 
 
         <Button Content="Zakończ" Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" Margin="10" Visibility="Visible" 
                 x:Name="endListButton" Click="endListButton_Click"  Style="{StaticResource classicButton}"/>

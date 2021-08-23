@@ -79,7 +79,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="150"/>
             </Grid.RowDefinitions>
-            <local:UserControlDataGrid CanUserAddRows="False" x:Name="adminDataGrid"/>
+           <local:UserControlDataGrid CanUserAddRows="False" x:Name="adminDataGrid"/> 
             
                 <StackPanel Grid.Row="1">
                 <Button Content="Zapisz zmiany" x:Name="saveListButton" Margin="5" Visibility="Visible" Click="saveListButton_Click" Style="{StaticResource wideButton}" Height="30"/>

@@ -1,21 +1,6 @@
 ﻿using ES_SYSTEM_K_Listy.Windows;
-using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Data.SqlClient;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace ES_SYSTEM_K_Listy
 {
@@ -29,7 +14,8 @@ namespace ES_SYSTEM_K_Listy
         {
             InitializeComponent();
             App.Current.Properties["defaultXMLPath"] = ConfigurationManager.AppSettings.Get("XMLPath");
-
+            App.Current.Properties["TC2ProgramsPath"] = ConfigurationManager.AppSettings.Get("TC2ProgramsPath");
+            App.Current.Properties["TC5ProgramsPath"] = ConfigurationManager.AppSettings.Get("TC5ProgramsPath");
         }
 
         private void checkLoginFunctionForTesting()
@@ -48,7 +34,7 @@ namespace ES_SYSTEM_K_Listy
         }
         private void loginSubmitButton_Click(object sender, RoutedEventArgs e)
         {
-            if(loginInput.Text == "admin" && passwordInput.Password == "123")
+            if (loginInput.Text == "admin" && passwordInput.Password == "123")
             {
                 App.Current.Properties["username"] = "admin";
                 App.Current.Properties["isAdmin"] = true;
@@ -148,7 +134,7 @@ namespace ES_SYSTEM_K_Listy
         private void settingsButton_Click(object sender, RoutedEventArgs e)
         {
             SettingsWindow window = new();
-                window.ShowDialog();
+            window.ShowDialog();
         }
     }
 }

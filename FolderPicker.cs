@@ -8,7 +8,7 @@ using System.Windows.Interop;  // for WPF support
 
 namespace ES_SYSTEM_K_Listy
 {
-    
+
     public class FolderPicker
     {
         public virtual string ResultPath { get; protected set; }

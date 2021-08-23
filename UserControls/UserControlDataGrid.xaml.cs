@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ES_SYSTEM_K_Listy.UserControls
 {
@@ -31,7 +20,7 @@ namespace ES_SYSTEM_K_Listy.UserControls
 
         public UserControlDataGrid()
         {
-            
+
             InitializeComponent();
             (Content as Grid).DataContext = this;
         }
@@ -39,13 +28,13 @@ namespace ES_SYSTEM_K_Listy.UserControls
         private void WideDataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
         {
             if (BegininngdEdit != null)
-             BegininngdEdit.Invoke(this, e);
+                BegininngdEdit.Invoke(this, e);
         }
 
         private void WideDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             if (BegininngdEdit != null)
-            CellEditEnding.Invoke(this, e);
+                CellEditEnding.Invoke(this, e);
         }
     }
 }
