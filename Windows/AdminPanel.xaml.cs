@@ -375,11 +375,20 @@ namespace ES_SYSTEM_K_Listy
                     {
                         dt.Rows[i][TC2Column.DisplayIndex] = true;
                     }
+                    else
+                    {
+                        dt.Rows[i][TC2Column.DisplayIndex] = false;
+                    }
 
                     if (TC5programMatch != null)
                     {
                         dt.Rows[i][TC5Column.DisplayIndex] = true;
                     }
+                    else
+                    {
+                        dt.Rows[i][TC5Column.DisplayIndex] = false;
+                    }
+
 
                 }
                 catch (Exception ex)
